@@ -5,7 +5,6 @@ import base64
 import sqlite3
 import win32crypt
 from Crypto.Cipher import AES
-from hashlib import pbkdf2_hmac
 import shutil
 
 __CHROME_PATH_LOCAL_STATE              = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Local State"%(os.environ['USERPROFILE']))
