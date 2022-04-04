@@ -11,8 +11,7 @@ def sanity():
 
     if os.path.exists("info.json"):
         with open("info.json", "r") as setup:
-            data = json.load(setup)
-            unique = data.get("uuid")
+            unique = json.load(setup).get("uuid")
     else:
         unique = generate_uuid()
         data = {
