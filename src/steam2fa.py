@@ -3,7 +3,7 @@ import os
 def findInPref(target,prefix):
     for path, dirs, files in os.walk(prefix):
         if target in dirs:
-            return os.path.join(path, target)
+            return os.path.join(path, target)p
 
 def findSteam():
     PREFIXES =['C:\\','D:\\']
