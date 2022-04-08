@@ -1,0 +1,8 @@
+discord.py==1.7.3
+pip==22.0.4
+PyAutoGUI==0.9.53
+pycryptodome==3.14.1
+python-dotenv==0.20.0
+requests==2.27.1
+scipy==1.8.0
+sounddevice==0.4.4
