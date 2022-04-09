@@ -1,7 +1,7 @@
 import os
 from base64 import b64decode
-import ctypes
-import string
+from ctypes import CDLL, POINTER, c_void_p
+from string import ascii_uppercase
 from classes.firefox import MyException, SECItem, PK11SlotInfo
 import json
 
@@ -20,7 +20,7 @@ def __find_file(name, path):
 
 
 def __get_host_drives():
-    return ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+    return ['%s:' % d for d in ascii_uppercase if os.path.exists('%s:' % d)]
 
 
 def __search_nss3_dll_libarary_path():
@@ -36,19 +36,19 @@ def __search_nss3_dll_libarary_path():
 def __load_nss3_dll_libarary():
     nss3_dll_libarary_path = __search_nss3_dll_libarary_path()
     if nss3_dll_libarary_path:
-        return ctypes.CDLL(nss3_dll_libarary_path)
+        return CDLL(nss3_dll_libarary_path)
     raise MyException("nss3.dll was not found in the firefox installation folder")
 
 
 def __set_nss3_attr_and_res(nss3):
-    SlotInfoPtr = ctypes.POINTER(PK11SlotInfo)
-    SECItemPtr = ctypes.POINTER(SECItem)
+    SlotInfoPtr = POINTER(PK11SlotInfo)
+    SECItemPtr = POINTER(SECItem)
 
     self = getattr(nss3, "PK11_GetInternalKeySlot")
     self.restype = SlotInfoPtr
 
     self = getattr(nss3, "PK11SDR_Decrypt")
-    self.argtypes = [SECItemPtr, SECItemPtr, ctypes.c_void_p]
+    self.argtypes = [SECItemPtr, SECItemPtr, c_void_p]
 
     self = getattr(nss3, "PK11_NeedLogin")
     self.argtypes = [SlotInfoPtr]
