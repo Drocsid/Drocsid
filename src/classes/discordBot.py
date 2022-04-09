@@ -7,10 +7,9 @@ import os as osVars
 import os.path as osp
 import platform
 
-# The main discordBot class, contains all relevant functions and params
-class discordBot:
+# The main DiscordBot class, contains all relevant functions and params
+class DiscordBot:
 
-    
     load_dotenv()
     bot = commands.Bot(command_prefix="!")
     ip = get_ip()
@@ -114,8 +113,8 @@ class discordBot:
                        "USage: !safe_disconnect\n\n"
                        "------------------------------- HELP -------------------------------")
 
-    def start(self):
-        bot.run(token)
+    bot.run(token)
+
 
 
 

@@ -1,10 +1,11 @@
-from classes.discordBot import *
+from classes import DiscordBot
 
 
 
 def main():
-    bot = discordBot()
-    bot.start()
+    disbot = DiscordBot()
+    
+    
 
 if __name__ == "__main__":
     main()
