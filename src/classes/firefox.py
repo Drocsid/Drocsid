@@ -1,5 +1,6 @@
 import ctypes
 
+
 class SECItem(ctypes.Structure):
     """struct needed to interact with libnss
     """
@@ -18,6 +19,17 @@ class PK11SlotInfo(ctypes.Structure):
     """Opaque structure representing a logical PKCS slot
     """
 
-class MyException(Exception):
+
+class NSS3NotFoundError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+class NSS3KeySlotCreationError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+class MasterPasswordDetected(Exception):
     def __init__(self, message):
         self.message = message
