@@ -2,7 +2,6 @@ import wmi
 import shutil
 import os
 import random
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
