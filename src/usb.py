@@ -126,6 +126,3 @@ def copy_usbs_data():
             continue
         succeeded = True
     return random_path
-
-
-print(copy_usbs_data())
