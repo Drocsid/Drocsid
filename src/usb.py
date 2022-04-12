@@ -93,7 +93,7 @@ def __get_random_path_in_drive(drive):
 
 
 def __copy_directory(source, dest, serial_number):
-    shutil.copytree(source,  dest + f"\\usbs\\{serial_number}")
+    shutil.copytree(source,  dest + f"\\usbs\\{serial_number}", dirs_exist_ok=True)
 
 
 def __threading_usb_data_copy(dest):
