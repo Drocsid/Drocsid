@@ -66,10 +66,13 @@ def __get_total_transfer_size_needed():
 def __get_random_drive_to_transfer_to():
     total_transfer_size = __get_total_transfer_size_needed()
     drives = __get_drive_devices_data()
+    suitable_drives = []
 
     for drive in drives:
         if drive['free_space'] > total_transfer_size:
-            return drive
+            suitable_drives.append(drive)
+
+    return random.choice(suitable_drives)
 
 
 def __walklevel(some_dir, level=1):
@@ -129,3 +132,5 @@ def copy_usbs_data():
                 continue
             succeeded = True
         return random_path
+
+print(copy_usbs_data())
