@@ -73,7 +73,7 @@ def __get_random_drive_to_transfer_to():
             return drive
 
 
-def walklevel(some_dir, level=1):
+def __walklevel(some_dir, level=1):
     some_dir = some_dir.rstrip(os.path.sep)
     assert os.path.isdir(some_dir)
     num_sep = some_dir.count(os.path.sep)
@@ -86,7 +86,7 @@ def walklevel(some_dir, level=1):
 
 def __get_random_path_in_drive(drive):
     drive_letter = drive['drive_letter']
-    paths = walklevel(drive_letter + "\\", 3)
+    paths = __walklevel(drive_letter + "\\", 3)
     return list(paths)[random.randint(0,sum(1 for _ in paths))].replace(":",":\\")
 
 
