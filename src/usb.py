@@ -132,5 +132,3 @@ def copy_usbs_data():
             except PermissionError:
                 continue
         return random_path
-
-print(copy_usbs_data())
