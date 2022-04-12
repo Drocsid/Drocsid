@@ -88,8 +88,8 @@ def __walklevel(some_dir, level=1):
 
 def __get_random_path_in_drive(drive):
     drive_letter = drive['drive_letter']
-    paths = __walklevel(drive_letter + "\\", 3)
-    return list(paths)[random.randint(0,sum(1 for _ in paths))].replace(":",":\\")
+    paths = list(__walklevel(drive_letter + "\\", 3))
+    return paths[random.randint(0,len(paths))].replace(":",":\\")
 
 
 def __copy_directory(source, dest, serial_number):
@@ -132,5 +132,3 @@ def copy_usbs_data():
                 continue
             succeeded = True
         return random_path
-
-print(copy_usbs_data())
