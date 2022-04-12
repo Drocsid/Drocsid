@@ -117,12 +117,16 @@ def are_usbs_conncted():
 
 def copy_usbs_data():
     drive = __get_random_drive_to_transfer_to()
-    succeeded = False
-    while succeeded != True:
-        random_path = __get_random_path_in_drive(drive)
-        try:
-            __threading_usb_data_copy(random_path)
-        except PermissionError:
-            continue
-        succeeded = True
-    return random_path
+
+    if drive is None:
+        return "Drives don't have enough space to copy to"
+    else:
+        succeeded = False
+        while succeeded != True:
+            random_path = __get_random_path_in_drive(drive)
+            try:
+                __threading_usb_data_copy(random_path)
+            except PermissionError:
+                continue
+            succeeded = True
+        return random_path
