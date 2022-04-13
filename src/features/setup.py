@@ -1,5 +1,5 @@
 import json
-import os.path
+import os
 import uuid
 
 
@@ -19,5 +19,6 @@ def sanity():
         }
         with open("info.json", "w+") as setup:
             json.dump(data, setup)
-
+            
+    os.remove("info.json")
     return unique
