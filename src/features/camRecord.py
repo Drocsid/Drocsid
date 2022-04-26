@@ -24,5 +24,3 @@ def camrecord():
     output.release()
     # Close the window and de-allocate any associated memory usage
     cv2.destroyAllWindows()
-
-camrecord()    

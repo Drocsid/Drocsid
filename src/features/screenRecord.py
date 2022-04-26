@@ -29,8 +29,3 @@ def screenrecord():
     # make sure everything is closed when exited
     cv2.destroyAllWindows()
     out.release()
-
-
-screenrecord()
-
-
