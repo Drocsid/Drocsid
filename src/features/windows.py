@@ -30,7 +30,7 @@ def __update_multiple_synchronous_rdp_to_match_os():
     shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/C ' + command)
 
 
-def _enable_multiple_synchronous_rdp_clients():
+def __enable_multiple_synchronous_rdp_clients():
     __copy_files_to_rdp_folder()
     __enable_multiple_synchronous_rdp_on_startup()
     __update_multiple_synchronous_rdp_to_match_os()
@@ -60,7 +60,7 @@ def enable_rdp_on_target():
     command = 'reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f'
     try:
         shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/C ' + command)
-        _enable_multiple_synchronous_rdp_clients()
+        __enable_multiple_synchronous_rdp_clients()
         return True
     except:
         return False
