@@ -11,4 +11,3 @@ requests==2.27.1
 scipy==1.8.0
 sounddevice==0.4.4
 WMI==1.5.1
-~ip==21.3.1
