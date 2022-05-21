@@ -16,7 +16,7 @@ def __get_target_channel_id_by_uuid(target_uuid):
     response = requests.get(f"https://discord.com/api/v9/channels/{__DISCORD_TARGETS_CHANNEL_ID}/messages", headers = headers)
 
     # verify the request succeeded
-    if (str(response.status_code).startswith('5') or str(response.status_code).startswith('5')):
+    if (str(response.status_code).startswith('4') or str(response.status_code).startswith('5')):
         return None
 
     messages = json.loads(response.text)
