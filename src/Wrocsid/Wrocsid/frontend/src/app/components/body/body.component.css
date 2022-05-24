@@ -1,0 +1,24 @@
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.online {
+    padding-right: 10%;
+    color: green
+}
+
+.offline {
+    padding-right: 10%;
+    color: red;
+}
+
+.timeInput {
+    margin-right: 10px;
+    margin-left: 10px;
+    flex-grow: 1;
+}
+
+.inputCommand {
+    text-align: center;
+}

