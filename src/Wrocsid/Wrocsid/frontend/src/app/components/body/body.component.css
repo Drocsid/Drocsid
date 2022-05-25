@@ -22,3 +22,7 @@
 .inputCommand {
     text-align: center;
 }
+
+button {
+    width: 200px;
+}

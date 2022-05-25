@@ -48,7 +48,7 @@ export class BodyComponent implements OnInit {
     this.targets = await firstValueFrom(this.wrocsid.get_targets_data())
 
     while(true) {
-      await this.delay(30 * 1000)
+      await this.delay(5 * 1000)
       temp_targets = await firstValueFrom(this.wrocsid.get_targets_data())
       if(!temp_targets) {
         continue
