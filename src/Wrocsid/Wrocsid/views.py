@@ -8,7 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 __TOKEN                      = os.environ.get("DISCORD_TOKEN") # should be in string type!
-__OBSERVER_TOKEN             = os.environ.get("DISCORD_TOKEN") # should be in string type!
+__OBSERVER_TOKEN             = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
 __DISCORD_TARGETS_CHANNEL_ID = os.environ.get("DISCORD_TARGETS_CHANNEL_ID")
 
 
@@ -17,7 +17,7 @@ __DISCORD_TARGETS_CHANNEL_ID = os.environ.get("DISCORD_TARGETS_CHANNEL_ID")
 
 
 def __get_all_target_data():
-    headers = {'authorization': 'Bot ' + __TOKEN}
+    headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
     response = requests.get(f"https://discord.com/api/v9/channels/{__DISCORD_TARGETS_CHANNEL_ID}/messages", headers = headers)
 
     # verify the request succeeded
@@ -31,7 +31,7 @@ def __get_all_target_data():
 
 
 def __get_target_channel_id_by_uuid(target_uuid):
-    headers = {'authorization': 'Bot ' + __TOKEN}
+    headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
     response = requests.get(f"https://discord.com/api/v9/channels/{__DISCORD_TARGETS_CHANNEL_ID}/messages", headers = headers)
 
     # verify the request succeeded
@@ -49,7 +49,7 @@ def __get_target_channel_id_by_uuid(target_uuid):
 
 @api_view(['GET'])
 def get_target_message_id_by_uuid(request, target_uuid):
-    headers = {'authorization': 'Bot ' + __TOKEN}
+    headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
     response = requests.get(f"https://discord.com/api/v9/channels/{__DISCORD_TARGETS_CHANNEL_ID}/messages", headers = headers)
 
     # verify the request succeeded
@@ -98,7 +98,7 @@ def target(request, target_uuid):
 @api_view(['GET'])
 def ping(request, target_uuid):
     command = "!ping"
-    __send_discord_command(target_uuid, command, observer=True)
+    __send_discord_command(target_uuid, command, True)
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
 
 
