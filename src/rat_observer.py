@@ -1,13 +1,16 @@
+from asyncio import sleep
 import os
 import re
 import json
 import threading
+import time
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from idna import check_nfc
 from features.setup import check_target_status, generate_uuid
 import requests
+import sched
 
 __DISCORD_TARGETS_CHANNEL_NAME = "targets"
 __DISCORD_TARGETS_CHANNEL_ID = os.environ.get("DISCORD_TARGETS_CHANNEL_ID")
@@ -18,9 +21,7 @@ def main():
     token = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
     api_base = "http://localhost:8000/api"
 
-    def check_targets():
-        delay = 30
-        threading.Timer(delay, check_targets).start()
+    def check_targets(sc):
         response = requests.get(f"{api_base}/targets")
 
         if response.text:
@@ -28,10 +29,15 @@ def main():
 
         for target in targets:
             requests.get(f"{api_base}/ping/{target['identifier']}")
+        
 
     @bot.event
     async def on_ready():
-        check_targets()
+        delay = 5
+        s = sched.scheduler(time.time, time.sleep)
+        s.enter(delay, 1, check_targets, (s,))
+        s.run()
+        
 
     @bot.event
     async def on_message(message):
