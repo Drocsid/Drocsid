@@ -1,11 +1,8 @@
 from asyncio import sleep
 import asyncio
 import os
-import platform
 import re
 import json
-import threading
-import time
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
