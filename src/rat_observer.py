@@ -9,10 +9,7 @@ import time
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from features.func import get_ip, get_location
-from features.setup import generate_uuid
 import requests
-import sched
 
 
 load_dotenv()
@@ -20,7 +17,7 @@ __DISCORD_TARGETS_CHANNEL_ID    = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID
 __DISCORD_GUILD_ID              = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
 __DISCORD_OBSERVER_TOKEN        = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
 __API_BASE                      = "http://localhost:8000/api"
-__CHECK_TARGETS_DELAY            = 10
+__CHECK_TARGETS_DELAY            = 60
 __CHECK_TARGET_TIMEOUT           = 5
 bot = commands.Bot(command_prefix="!")
 
