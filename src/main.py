@@ -88,6 +88,9 @@ def main():
         if ctx.channel.name != generate_uuid():
             return
 
+        # let the observer start waiting for the message
+        await asyncio.sleep(1)
+        
         await ctx.reply('pong!')
 
     @bot.command()
