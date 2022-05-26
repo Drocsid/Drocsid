@@ -93,6 +93,8 @@ def main():
     async def ping(ctx):
         await __check_target_status(bot, ctx)
         threading.Timer(_CHECK_TARGETS_DELAY, check_targets).start()
+
+
     bot.run(__DISCORD_OBSERVER_TOKEN)
 
 if __name__ == '__main__':
