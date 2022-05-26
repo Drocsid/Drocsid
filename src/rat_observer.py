@@ -12,8 +12,9 @@ from features.setup import check_target_status, generate_uuid
 import requests
 import sched
 
-__DISCORD_TARGETS_CHANNEL_NAME = "targets"
+
 __DISCORD_TARGETS_CHANNEL_ID = os.environ.get("DISCORD_TARGETS_CHANNEL_ID")
+
 
 def main():
     load_dotenv() #take enviroment variables from file .env
@@ -50,7 +51,7 @@ def main():
     @bot.event
     async def on_guild_channel_create(channel):
         guild = channel.guild
-        targets_channel = discord.utils.get(guild.text_channels, name=__DISCORD_TARGETS_CHANNEL_NAME)
+        targets_channel = discord.utils.get(guild.text_channels, id=__DISCORD_TARGETS_CHANNEL_ID)
 
         await targets_channel.send(json.dumps({
             'identifier': channel.name,
