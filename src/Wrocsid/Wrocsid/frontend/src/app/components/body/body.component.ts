@@ -89,7 +89,10 @@ export class BodyComponent implements OnInit {
     for(let i = 0; i < targets.length; i++) {
       if(targets[i].channel_id != temp_targets[i].channel_id) return false
       if(targets[i].identifier != temp_targets[i].identifier) return false
-      if(targets[i].metadata != temp_targets[i].metadata) return false
+      if(targets[i].metadata.ip != temp_targets[i].metadata.ip) return false
+      if(targets[i].metadata.country != temp_targets[i].metadata.country) return false
+      if(targets[i].metadata.city != temp_targets[i].metadata.city) return false
+      if(targets[i].metadata.os != temp_targets[i].metadata.os) return false
       if(targets[i].online != temp_targets[i].online) return false
     }
 

@@ -81,11 +81,20 @@ def main():
     async def on_guild_channel_create(channel):
         guild = channel.guild
         targets_channel = discord.utils.get(guild.text_channels, id=__DISCORD_TARGETS_CHANNEL_ID)
+        
+        # get target metadata to json
+        tmp = re.split(r'\s+\|\s+', channel.topic)
+        metadata_list = list(map(lambda content: re.sub(r'^.+\:\s+', '',content), tmp))
 
         await targets_channel.send(json.dumps({
             'identifier': channel.name,
             'channel_id': channel.id,
-            'metadata': channel.topic,
+            'metadata': {
+                'ip': metadata_list[0],
+                'country': metadata_list[1],
+                'city': metadata_list[2],
+                'os': metadata_list[3]
+            },
             'online': True
         }))
         
