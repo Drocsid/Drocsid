@@ -1,3 +1,4 @@
+import asyncio
 import os
 import json
 import requests
@@ -47,6 +48,7 @@ def __get_target_channel_id_by_uuid(target_uuid):
 
     return None
 
+
 @api_view(['GET'])
 def get_target_message_id_by_uuid(request, target_uuid):
     headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
@@ -68,10 +70,6 @@ def get_target_message_id_by_uuid(request, target_uuid):
 def __send_discord_command(target_uuid, command, observer=False):
     target_text_channel_id = __get_target_channel_id_by_uuid(target_uuid)
     bot_token = __OBSERVER_TOKEN if observer else __TOKEN
-
-    # verify target text channel id was provided
-    if target_text_channel_id is None:
-        return
 
     headers = {
         'authorization': 'Bot ' + bot_token,
