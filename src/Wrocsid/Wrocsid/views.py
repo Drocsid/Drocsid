@@ -1,4 +1,3 @@
-import asyncio
 import os
 import json
 import requests
@@ -11,7 +10,6 @@ load_dotenv(find_dotenv())
 __TOKEN                      = os.environ.get("DISCORD_TOKEN") # should be in string type!
 __OBSERVER_TOKEN             = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
 __DISCORD_TARGETS_CHANNEL_ID = os.environ.get("DISCORD_TARGETS_CHANNEL_ID")
-
 
 
 # ==================================== HELPER DATA FUNCTIONS/API ====================================
