@@ -26,3 +26,11 @@
 button {
     width: 200px;
 }
+
+#search {
+    text-align: center;
+}
+
+.onlineFilter {
+    margin-left: 1rem;
+}
