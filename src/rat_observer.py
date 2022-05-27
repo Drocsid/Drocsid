@@ -13,7 +13,6 @@ load_dotenv()
 __DISCORD_TARGETS_CHANNEL_ID                = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID")) # should be in int type!
 __DISCORD_GUILD_ID                          = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
 __DISCORD_OBSERVER_TOKEN                    = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
-__API_BASE                                  = "http://localhost:8000/api"
 __OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES   = 2
 bot = commands.Bot(command_prefix="!")
 
