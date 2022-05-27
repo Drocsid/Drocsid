@@ -1,21 +1,20 @@
 from asyncio import sleep
-import asyncio
 import os
 import re
 import json
+from datetime import datetime, timedelta
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 import requests
 
 
 load_dotenv()
-__DISCORD_TARGETS_CHANNEL_ID    = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID")) # should be in int type!
-__DISCORD_GUILD_ID              = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
-__DISCORD_OBSERVER_TOKEN        = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
-__API_BASE                      = "http://localhost:8000/api"
-__CHECK_TARGETS_DELAY            = 60
-__CHECK_TARGET_TIMEOUT           = 5
+__DISCORD_TARGETS_CHANNEL_ID                = int(os.environ.get("DISCORD_TARGETS_CHANNEL_ID")) # should be in int type!
+__DISCORD_GUILD_ID                          = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
+__DISCORD_OBSERVER_TOKEN                    = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
+__API_BASE                                  = "http://localhost:8000/api"
+__OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES   = 2
 bot = commands.Bot(command_prefix="!")
 
 
@@ -33,42 +32,68 @@ def check_if_channel_exists(channel_id):
     return False
 
 
-async def __check_target_status(ctx):
-    message_check = 'pong!'
-
-    def check(message):
-        return message.author.bot and message.content == message_check
-
-    online = True
-
-    try:
-        await bot.wait_for('message', timeout=__CHECK_TARGET_TIMEOUT, check=check)
-    except asyncio.TimeoutError:
-        online = False
-
-    response = requests.get(f"{__API_BASE}/targetmessagebyuuid/{ctx.channel.name}")
-
-    if response.text:
-        message = json.loads(response.text)
-        message_id = message['message_id']
-        target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
-        target_message = await target_channel.fetch_message(message_id)
-        json_content = json.loads(target_message.content)
-        json_content['online'] = online
-        await target_message.edit(content = json.dumps(json_content))
-
-
-async def check_targets():
+def get_targets_data():
     response = requests.get(f"{__API_BASE}/targets")
 
-    if response.text:
+    if response.status_code == 200:
         targets = json.loads(response.text)
+        return targets
+    return None
+
+
+def check(message, ping_message):
+    return message.author.bot and message.content == ping_message
+
+
+async def __check_targets_status():
+    ping_message = 'ping!'
+    targets_data = get_targets_data()
+    online = False
+
+    for target_data in targets_data:
+        # if a target channel doesn't exist, create one and set target online status to false
+        # after that continue to next target
+        if not check_if_channel_exists(target_data['channel_id']):
+            await create_target_text_channel(target_data)
+            response = requests.get(f"{__API_BASE}/targetmessagebyuuid/{target_data['identifier']}")
+
+            if response.status_code == 200:
+                message = json.loads(response.text)
+                message_id = message['message_id']
+                target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
+                target_message = await target_channel.fetch_message(message_id)
+                json_content = json.loads(target_message.content)
+                json_content['online'] = False
+                await target_message.edit(content = json.dumps(json_content))
+
+            continue
+
+        # fetch target's channel messages and check if a ping was delivered
+        # from target in the time defined in __OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES variable
+        channel = await bot.fetch_channel(target_data['channel_id'])
+        now = datetime.today().utcnow()
+        new_time = now - timedelta(minutes=__OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES)
+        messages = await channel.history(limit=100, after=new_time, oldest_first=False).flatten()
+
+        for message in messages:
+            if check(message, ping_message):
+                online = True
+                break
         
-        for target in targets:
-            if check_if_channel_exists(target['channel_id']):
-                requests.get(f"{__API_BASE}/ping/{target['identifier']}")
-            else:
-                await create_target_text_channel(target)
+        # set target's online status depending if the target pinged in the last
+        # __OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES minutes
+        response = requests.get(f"{__API_BASE}/targetmessagebyuuid/{target_data['identifier']}")
+
+        if response.status_code == 200:
+            message = json.loads(response.text)
+            message_id = message['message_id']
+            target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
+            target_message = await target_channel.fetch_message(message_id)
+            json_content = json.loads(target_message.content)
+            json_content['online'] = online
+            await target_message.edit(content = json.dumps(json_content))
+
+        online = False
 
 
 async def create_target_text_channel(target_data):
@@ -85,22 +110,19 @@ async def create_target_text_channel(target_data):
         if target_data['channel_id'] == target_message_data['channel_id']:
             await target.delete()
 
-    await check_targets()
-
 
 def main():
-    @bot.event
-    async def on_ready():
+    @tasks.loop(count=1)
+    async def wait_until_ready():
+        await bot.wait_until_ready()
         print('RAT OBSERVER ONLINE!')
-        await check_targets()
+        check_targets_status.start()
 
-    @bot.event
-    async def on_message(message):
-        if not message.author.bot:
-            return
 
-        if re.match(r'!ping',message.content):
-            await ping(await bot.get_context(message))
+    @tasks.loop(minutes=__OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES)
+    async def check_targets_status():
+        await __check_targets_status()
+
 
     @bot.event
     async def on_guild_channel_create(channel):
@@ -121,15 +143,10 @@ def main():
             },
             'online': True
         }))
-        
-    @bot.command()
-    async def ping(ctx):
-        await __check_target_status(ctx)
-        await asyncio.sleep(__CHECK_TARGETS_DELAY)
-        await check_targets()
 
-
+    wait_until_ready.start()
     bot.run(__DISCORD_OBSERVER_TOKEN)
+
 
 if __name__ == '__main__':
     main()

