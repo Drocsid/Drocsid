@@ -22,6 +22,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommandsComponent } from './components/commands/commands/commands.component';
+import { CommandsAllComponent } from './components/commandsAll/commands-all/commands-all.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     BodyComponent,
     NavbarComponent,
-    BodyComponent
+    BodyComponent,
+    CommandsComponent,
+    CommandsAllComponent
   ],
   imports: [
     BrowserModule,
