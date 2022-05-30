@@ -50,4 +50,9 @@ export class WrocsidService {
     let url = this.api_base.concat("/results/").concat(identifier)
     return this.http.get(url)
   }
+
+  videoRecord(identifier: string, record_time: string) {
+    let url = this.api_base.concat("/videorecord/").concat(identifier).concat("/").concat(record_time)
+    return this.http.get(url).subscribe()
+  }
 }

