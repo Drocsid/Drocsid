@@ -7,7 +7,11 @@
             <span *ngFor="let attachment of message.attachments">
                 <img *ngIf="isPicture(attachment.content_type)" [src]="attachment.url">
                 <span *ngIf="isAudio(attachment.content_type)">
-                    <mat-icon>audiotrack</mat-icon>
+                    <mat-icon>music_video</mat-icon>
+                    <a [href]="attachment.url">{{attachment.filename}}</a>
+                </span>
+                <span *ngIf="isVideo(attachment.content_type)">
+                    <mat-icon>videocam</mat-icon>
                     <a [href]="attachment.url">{{attachment.filename}}</a>
                 </span>
             </span>

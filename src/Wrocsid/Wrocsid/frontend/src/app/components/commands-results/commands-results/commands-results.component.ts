@@ -27,7 +27,6 @@ export class CommandsResultsComponent implements OnInit {
         if (data) {
           this.changeLoadingStatus()
           this.target_results$ = data
-          console.log(data)
         }
       })
     })
@@ -43,5 +42,9 @@ export class CommandsResultsComponent implements OnInit {
 
   isAudio(content_type: string) {
     return content_type === "audio/x-wav"
+  }
+
+  isVideo(content_type: string) {
+    return content_type === "video/x-msvideo"
   }
 }
