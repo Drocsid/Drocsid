@@ -14,7 +14,7 @@ __DISCORD_TARGETS_CHANNEL_ID                = int(os.environ.get("DISCORD_TARGET
 __DISCORD_GUILD_ID                          = int(os.environ.get("DISCORD_GUILD_ID")) # should be in int type!
 __DISCORD_OBSERVER_TOKEN                    = os.environ.get("DISCORD_OBSERVER_TOKEN") # should be in string type!
 __OBSERVER_CHECK_TARGETS_DELAY_IN_MINUTES   = 2
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix="~")
 
 
 def __get_channel_by_id(channel_id):
