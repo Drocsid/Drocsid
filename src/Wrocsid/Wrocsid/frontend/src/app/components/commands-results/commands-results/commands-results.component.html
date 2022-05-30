@@ -10,7 +10,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="target_results$ && target_results$.length == 0">
+<div *ngIf="!target_results$">
     <h1>Currently no results</h1>
 </div>
 <div [hidden]="loading_bar_finished" class="progressBar">
