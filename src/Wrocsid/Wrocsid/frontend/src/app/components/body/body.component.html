@@ -1,6 +1,6 @@
 <mat-drawer-container autosize class="main">
   <mat-drawer #drawer mode="side">
-    <app-commands-all [targets]="targets$"></app-commands-all>
+    <app-commands-all [targets$]="targets$"></app-commands-all>
   </mat-drawer>
   <button mat-raised-button id="openDrawerOnHover" (click)="drawer.toggle()">
     <mat-icon *ngIf="drawer.opened">arrow_back_ios</mat-icon>

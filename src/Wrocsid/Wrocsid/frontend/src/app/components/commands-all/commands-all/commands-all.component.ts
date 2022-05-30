@@ -15,11 +15,11 @@ export class CommandsAllComponent implements OnInit {
   downloadFormAll!: FormGroup
   path: string = ""
 
-  @Input() targets!: Array<Target>
+  @Input() targets$!: Array<Target>
 
   constructor(private wrocsid:WrocsidService, private fb: FormBuilder) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.mouseFormAll = this.fb.group({
       timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
       timeUnits: ['s']
@@ -78,7 +78,7 @@ export class CommandsAllComponent implements OnInit {
   }
 
   sendCommandToAllOnlineTargets(command: string, args?: any) {
-    let onlineTargets = this.targets.filter((target: Target) => this.onlineFilter(target, true))
+    let onlineTargets = this.targets$.filter((target: Target) => this.onlineFilter(target, true))
     onlineTargets.forEach((onlineTarget: Target) => {
       if(args) {
         this.wrocsidHandler(command, onlineTarget.identifier, args)
