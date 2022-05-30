@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, interval } from 'rxjs';
 import { Target } from 'src/app/Model';
 import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
 
@@ -10,31 +10,26 @@ import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
 })
 export class CommandsResultsComponent implements OnInit {
 
-  @Input() target!: Target
+  @Input() target$!: Target
 
-  target_results!:any
+  target_results$!: any
   loading_bar_finished: boolean = false
   
   constructor(private wrocsid: WrocsidService) { }
 
-  async ngOnInit(): Promise<void> {
-    this.target_results = await firstValueFrom(this.wrocsid.getTargetResults(this.target.identifier))
+  ngOnInit(): void {
+    this.wrocsid.getTargetResults(this.target$.identifier).subscribe((data) => {
+      this.target_results$ = data
+    })
 
-    let temp_results
-    while(true) {
-      this.changeLoadingStatus()
-      await this.delay(10 * 1000)
-      temp_results = await firstValueFrom(this.wrocsid.getTargetResults(this.target.identifier))
-      this.changeLoadingStatus()
-      if(!temp_results) {
-        continue
-      }
-      this.target_results = temp_results
-    }
-  }
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    interval(10 * 1000).subscribe(() => {
+      this.wrocsid.getTargetResults(this.target$.identifier).subscribe(data => {
+        if (data) {
+          this.changeLoadingStatus()
+          this.target_results$ = data
+        }
+      })
+    })
   }
 
   changeLoadingStatus() {
