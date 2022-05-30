@@ -1,9 +1,9 @@
 <div *ngIf="target_results$" class="resultsDiv">
     <div *ngFor="let message of target_results$.messages">
-        <div *ngIf="message">
+        <div *ngIf="message && message.content.length > 0">
             {{message.content}}
         </div>
-        <div *ngIf="message">
+        <div *ngIf="message && message.attachments.length > 0">
             <span *ngFor="let attachment of message.attachments">
                 <img [src]="attachment.url">
             </span>
