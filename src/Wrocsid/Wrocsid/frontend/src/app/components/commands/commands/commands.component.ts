@@ -16,11 +16,11 @@ export class CommandsComponent implements OnInit {
   disabled: boolean = true
   path: string = ""
 
-  @Input() target!: Target
+  @Input() target$!: Target
 
   constructor(private wrocsid:WrocsidService, private fb: FormBuilder) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.mouseForm = this.fb.group({
       timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
       timeUnits: ['s']
@@ -53,11 +53,6 @@ export class CommandsComponent implements OnInit {
 
   changeInputFormState() {
     this.disabled = !this.disabled
-  }
-
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   check_if_targets_equal(targets: any, temp_targets: any) {
