@@ -7,3 +7,7 @@
 button {
     width: 200px;
 }
+
+.commandBtns {
+    margin-top: 1rem;
+}

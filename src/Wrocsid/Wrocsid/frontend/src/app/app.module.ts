@@ -19,11 +19,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommandsComponent } from './components/commands/commands/commands.component';
 import { CommandsAllComponent } from './components/commandsAll/commands-all/commands-all.component';
+import { CommandsResultsComponent } from './components/commands-results/commands-results/commands-results.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { CommandsAllComponent } from './components/commandsAll/commands-all/comm
     NavbarComponent,
     BodyComponent,
     CommandsComponent,
-    CommandsAllComponent
+    CommandsAllComponent,
+    CommandsResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { CommandsAllComponent } from './components/commandsAll/commands-all/comm
     MatCardModule,
     MatSlideToggleModule,
     MatSidenavModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -28,7 +28,14 @@
               IP: {{ target.metadata.ip }} | COUNTRY: {{ target.metadata.country }} | CITY: {{ target.metadata.city }} | OS: {{ target.metadata.os }}
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <app-commands [target]="target"></app-commands>
+          <mat-tab-group mat-stretch-tabs>
+            <mat-tab label="Commands">
+              <app-commands [target]="target"></app-commands>
+            </mat-tab>
+            <mat-tab label="Results">
+              <app-commands-results [target]="target"></app-commands-results>
+            </mat-tab>
+          </mat-tab-group>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
