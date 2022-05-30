@@ -14,14 +14,6 @@ export class BodyComponent implements OnInit {
   private panelOpenState: boolean = false
   public targets!: any
   public targetsSearch!: any
-  mouseForm!: FormGroup
-  recordForm!: FormGroup
-  downloadForm!: FormGroup
-  mouseFormAll!: FormGroup
-  recordFormAll!: FormGroup
-  downloadFormAll!: FormGroup
-  disabled: boolean = false
-  path: string = ""
   search: string = ""
   showOnlineTargetsOnly: boolean = false
 
