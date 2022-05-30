@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
 import { firstValueFrom } from 'rxjs';
-import { AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Target } from 'src/app/Model';
 
 @Component({
