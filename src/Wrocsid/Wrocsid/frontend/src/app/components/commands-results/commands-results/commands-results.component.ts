@@ -27,6 +27,7 @@ export class CommandsResultsComponent implements OnInit {
         if (data) {
           this.changeLoadingStatus()
           this.target_results$ = data
+          console.log(data)
         }
       })
     })
@@ -34,5 +35,13 @@ export class CommandsResultsComponent implements OnInit {
 
   changeLoadingStatus() {
     this.loading_bar_finished = !this.loading_bar_finished
+  }
+
+  isPicture(content_type: string) {
+    return content_type === "image/jpeg" 
+  }
+
+  isAudio(content_type: string) {
+    return content_type === "audio/x-wav"
   }
 }

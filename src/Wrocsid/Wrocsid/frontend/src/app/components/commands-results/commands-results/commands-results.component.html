@@ -5,7 +5,11 @@
         </div>
         <div *ngIf="message && message.attachments.length > 0">
             <span *ngFor="let attachment of message.attachments">
-                <img [src]="attachment.url">
+                <img *ngIf="isPicture(attachment.content_type)" [src]="attachment.url">
+                <span *ngIf="isAudio(attachment.content_type)">
+                    <mat-icon>audiotrack</mat-icon>
+                    <a [href]="attachment.url">{{attachment.filename}}</a>
+                </span>
             </span>
         </div>
     </div>
