@@ -1,6 +1,6 @@
 <mat-drawer-container autosize class="main">
   <mat-drawer #drawer mode="side">
-    <app-commands-all [targets]="targets"></app-commands-all>
+    <app-commands-all [targets]="targets$"></app-commands-all>
   </mat-drawer>
   <button mat-raised-button id="openDrawerOnHover" (click)="drawer.toggle()">
     <mat-icon *ngIf="drawer.opened">arrow_back_ios</mat-icon>
@@ -16,8 +16,8 @@
       <mat-slide-toggle disableRipple="true" class="onlineFilter" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
     </div>
     <div class="center">
-      <mat-accordion *ngIf="targets">
-        <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targetsSearch" [disabled]="!target.online">
+      <mat-accordion *ngIf="targets$">
+        <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targetsSearch$" [disabled]="!target.online">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <mat-icon class="online" *ngIf="(target && target.online)">wifi</mat-icon>
@@ -33,7 +33,7 @@
               <app-commands [target]="target"></app-commands>
             </mat-tab>
             <mat-tab label="Results">
-              <app-commands-results [target]="target"></app-commands-results>
+              <!-- <app-commands-results [target]="target"></app-commands-results> -->
             </mat-tab>
           </mat-tab-group>
         </mat-expansion-panel>

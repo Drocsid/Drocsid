@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, interval } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Target } from 'src/app/Model';
 
@@ -12,31 +12,27 @@ import { Target } from 'src/app/Model';
 export class BodyComponent implements OnInit {
 
   private panelOpenState: boolean = false
-  public targets!: any
-  public targetsSearch!: any
+  targets$!: any
+  targetsSearch$!: any
   search: string = ""
   showOnlineTargetsOnly: boolean = false
 
   constructor(private wrocsid:WrocsidService, private fb: FormBuilder) {}
 
-  async ngOnInit(): Promise<void> {
-    let temp_targets
-    this.targets = this.targetsSearch = await firstValueFrom(this.wrocsid.get_targets_data())
+  ngOnInit(): void {
+    this.wrocsid.get_targets_data().subscribe(data => {
+      this.targets$ = this.targetsSearch$ = data
+    })
 
-    while(true) {
-      await this.delay(5 * 1000)
-      temp_targets = await firstValueFrom(this.wrocsid.get_targets_data())
-      if(!temp_targets) {
-        continue
-      }
-      if(!this.check_if_targets_equal(this.targets, temp_targets)) {
-        this.targets = this.targetsSearch = temp_targets
-      }
-    }
-  }
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    interval(5 * 1000).subscribe(() => {
+      this.wrocsid.get_targets_data().subscribe(data => {
+        if (data) {
+          if(!this.check_if_targets_equal(this.targets$, data)) {
+            this.targets$ = this.targetsSearch$ = data
+          }
+        }
+      })
+    })
   }
 
   check_if_targets_equal(targets: any, temp_targets: any) {
@@ -77,24 +73,24 @@ export class BodyComponent implements OnInit {
 
   searchQuery() {
     if (this.search.length > 0) {
-      this.targetsSearch = this.targets
+      this.targetsSearch$ = this.targets$
       .filter((target: Target) => this.searchFilter(target, this.search))
     } else {
-      this.targetsSearch = this.targets
+      this.targetsSearch$ = this.targets$
     }
 
     if(this.showOnlineTargetsOnly) {
-      this.targetsSearch = this.targetsSearch.filter((target: Target) => this.onlineFilter(target, this.showOnlineTargetsOnly))
+      this.targetsSearch$ = this.targetsSearch$.filter((target: Target) => this.onlineFilter(target, this.showOnlineTargetsOnly))
     }
   }
 
   onlineFilterClicked() {
     if (this.showOnlineTargetsOnly) {
-      this.targetsSearch = this.targets
+      this.targetsSearch$ = this.targets$
       .filter((target: Target) => this.onlineFilter(target, this.showOnlineTargetsOnly))
       .filter((target: Target) => this.searchFilter(target, this.search))
     } else {
-      this.targetsSearch = this.targets.filter((target: Target) => this.searchFilter(target, this.search))
+      this.targetsSearch$ = this.targets$.filter((target: Target) => this.searchFilter(target, this.search))
     }
   }
 }
