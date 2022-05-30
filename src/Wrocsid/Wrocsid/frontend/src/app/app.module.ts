@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -58,6 +59,7 @@ import { CommandsResultsComponent } from './components/commands-results/commands
     MatSlideToggleModule,
     MatSidenavModule,
     MatTabsModule,
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

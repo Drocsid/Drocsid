@@ -45,4 +45,9 @@ export class WrocsidService {
     let url = this.api_base.concat("/getSteam2fa/").concat(identifier)
     this.http.get(url).subscribe()
   }
+
+  getTargetResults(identifier: string) {
+    let url = this.api_base.concat("/results/").concat(identifier)
+    return this.http.get(url)
+  }
 }

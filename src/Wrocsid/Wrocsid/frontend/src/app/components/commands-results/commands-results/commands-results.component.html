@@ -1,1 +1,18 @@
-<p>commands-results works!</p>
+<div *ngIf="target_results?.messages?.length > 0" class="resultsDiv">
+    <div *ngFor="let message of target_results.messages">
+        <div *ngIf="message?.content?.length > 0">
+            {{message.content}}
+        </div>
+        <div *ngIf="message?.attachments?.length > 0">
+            <span *ngFor="let attachment of message.attachments">
+                <img [src]="attachment.url">
+            </span>
+        </div>
+    </div>
+</div>
+<div *ngIf="target_results && target_results.messages.length == 0">
+    <h1>Currently no results</h1>
+</div>
+<div [hidden]="loading_bar_finished" class="progressBar">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

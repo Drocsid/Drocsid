@@ -1,0 +1,22 @@
+.resultsDiv {
+    overflow-y: scroll;
+    height: 20rem;
+    text-align: center;
+    width: 45.4rem;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    font-size: larger;
+    margin-top: 1rem;
+}
+
+.resultsDiv::-webkit-scrollbar {
+    display: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.progressBar {
+    margin-top: 1rem;
+}
