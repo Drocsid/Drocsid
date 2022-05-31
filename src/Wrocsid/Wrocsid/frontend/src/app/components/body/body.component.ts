@@ -36,6 +36,7 @@ export class BodyComponent implements OnInit {
   }
 
   check_if_targets_equal(targets: any, temp_targets: any) {
+    if (!targets) return false
     if(targets.length != temp_targets.length) return false
 
     for(let i = 0; i < targets.length; i++) {

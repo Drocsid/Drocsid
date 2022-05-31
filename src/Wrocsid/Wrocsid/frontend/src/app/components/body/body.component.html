@@ -11,9 +11,9 @@
       <mat-icon>search</mat-icon>
       <mat-form-field appearance="fill">
         <mat-label>search</mat-label>
-        <input matInput [(ngModel)]="search" (input)="searchQuery()" placeholder="Ex. tel aviv" >
+        <input matInput [(ngModel)]="search" [disabled]="!targets$" (input)="searchQuery()" placeholder="Ex. tel aviv" >
       </mat-form-field>
-      <mat-slide-toggle disableRipple="true" class="onlineFilter" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
+      <mat-slide-toggle disableRipple="true" class="onlineFilter" [disabled]="!targets$" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
     </div>
     <div class="center">
       <mat-accordion *ngIf="targets$">
