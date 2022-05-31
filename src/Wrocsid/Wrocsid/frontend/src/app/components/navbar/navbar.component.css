@@ -5,6 +5,14 @@
 
 .navbar {
   margin: 0;
+  padding-top: 0.5rem;
+  background-color: rgb(160, 119, 199);
+  color: white;
+  height: 4.5rem;
+}
+
+.navbar span {
+  font-size: 2rem;
 }
 
 .logoTitle {
