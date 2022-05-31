@@ -36,3 +36,16 @@ button {
     height: 100%;
     float: left;
 }
+
+.noTargets {
+    text-align: center;
+}
+
+.noTargets img {
+    margin-bottom: 1rem;
+    width: 20rem;
+}
+
+.noTargets div {
+    font-size: 3rem;
+}
