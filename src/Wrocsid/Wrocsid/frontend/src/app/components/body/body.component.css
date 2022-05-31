@@ -1,3 +1,8 @@
+.main {
+    height: 92.6%;
+    background-color: white;
+}
+
 .center {
     display: flex;
     justify-content: center;
@@ -24,11 +29,6 @@ button {
 
 .onlineFilter {
     margin-left: 1rem;
-}
-
-.main {
-    height: 93.5%;
-    background-color: white;
 }
 
 #openDrawerOnHover {
