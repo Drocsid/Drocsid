@@ -20,3 +20,19 @@ img {
 .progressBar {
     margin-top: 1rem;
 }
+
+.textResult {
+    background-color:rgb(249, 243, 252);
+}
+
+.picResult {
+    background-color:rgb(203, 194, 207);
+}
+
+.audioResult {
+    background-color:rgb(245, 229, 253);
+}
+
+.videoResult {
+    background-color:rgb(238, 228, 255);
+}

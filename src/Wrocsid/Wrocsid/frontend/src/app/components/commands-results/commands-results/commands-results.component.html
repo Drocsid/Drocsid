@@ -1,19 +1,19 @@
 <div *ngIf="target_results$" class="resultsDiv">
     <div *ngFor="let message of target_results$.messages">
-        <div *ngIf="message && message.content.length > 0">
+        <div *ngIf="message && message?.content?.length > 0" class="textResult">
             {{message.content}}
         </div>
-        <div *ngIf="message && message.attachments.length > 0">
+        <div *ngIf="message && message?.attachments?.length > 0">
             <span *ngFor="let attachment of message.attachments">
-                <img *ngIf="isPicture(attachment.content_type)" [src]="attachment.url">
-                <span *ngIf="isAudio(attachment.content_type)">
+                <img *ngIf="isPicture(attachment.content_type)" [src]="attachment.url" class="picResult">
+                <div *ngIf="isAudio(attachment.content_type)" class="audioResult">
                     <mat-icon>music_video</mat-icon>
                     <a [href]="attachment.url">{{attachment.filename}}</a>
-                </span>
-                <span *ngIf="isVideo(attachment.content_type)">
+                </div>
+                <div *ngIf="isVideo(attachment.content_type)" class="videoResult">
                     <mat-icon>videocam</mat-icon>
                     <a [href]="attachment.url">{{attachment.filename}}</a>
-                </span>
+                </div>
             </span>
         </div>
     </div>
