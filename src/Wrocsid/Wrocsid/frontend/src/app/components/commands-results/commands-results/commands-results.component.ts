@@ -22,7 +22,7 @@ export class CommandsResultsComponent implements OnInit {
       this.target_results$ = data
     })
 
-    interval(10 * 1000).subscribe(() => {
+    interval(20 * 1000).subscribe(() => {
       this.wrocsid.getTargetResults(this.target$.identifier).subscribe(data => {
         if (data) {
           this.changeLoadingStatus()

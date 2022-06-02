@@ -28,6 +28,13 @@ import { CommandsComponent } from './components/commands/commands/commands.compo
 import { CommandsAllComponent } from './components/commands-all/commands-all/commands-all.component';
 import { CommandsResultsComponent } from './components/commands-results/commands-results/commands-results.component';
 
+
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
+import { TargetHealthCheckComponent } from './components/target-health-check/target-health-check/target-health-check.component';
+
+PlotlyModule.plotlyjs = PlotlyJS;
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +44,8 @@ import { CommandsResultsComponent } from './components/commands-results/commands
     BodyComponent,
     CommandsComponent,
     CommandsAllComponent,
-    CommandsResultsComponent
+    CommandsResultsComponent,
+    TargetHealthCheckComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +68,7 @@ import { CommandsResultsComponent } from './components/commands-results/commands
     MatSidenavModule,
     MatTabsModule,
     MatProgressBarModule,
+    PlotlyModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

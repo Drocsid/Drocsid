@@ -1,10 +1,12 @@
 import os
 import json
+import re
 import requests
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from dotenv import load_dotenv, find_dotenv
-
+from datetime import datetime
+from dateutil import tz
 
 load_dotenv(find_dotenv())
 __TOKEN                      = os.environ.get("DISCORD_TOKEN") # should be in string type!
@@ -79,6 +81,38 @@ def __get_target_results(target_uuid):
     return JsonResponse({'messages': messages_data_filtered})
 
 
+def __get_target_pings(target_uuid):
+    headers = {'authorization': 'Bot ' + __OBSERVER_TOKEN}
+    target_channel_id = __get_target_channel_id_by_uuid(target_uuid)
+    response = requests.get(f"https://discord.com/api/v9/channels/{target_channel_id}/messages?limit=100", headers = headers)
+
+    if response.status_code != 200:
+        return JsonResponse({'error': response.text})
+    
+    messages = json.loads(response.text)
+    messages_data = list(map(lambda message: {'content': message['content'], 'timestamp': message['timestamp']}, messages))
+    messages_data_filtered = list(filter(lambda message_data: message_data['content'] == 'ping!', messages_data))
+
+    # convert from utc to local time-zone
+    def strptime_convert(message):
+        from_zone = tz.tzutc()
+        to_zone = tz.tzlocal()
+        strptime_convention = ''
+
+        # check if there's a milisecond indicator in the form of a '.'
+        # the strptime convention changes because of that (with or without the .%f)
+        if re.search(r'.+\..+', message['timestamp']):
+            strptime_convention = '%Y-%m-%dT%H:%M:%S.%f+00:00'
+        else:
+            strptime_convention = '%Y-%m-%dT%H:%M:%S+00:00'
+
+        return datetime.strptime(message['timestamp'], strptime_convention).replace(tzinfo=from_zone).astimezone(to_zone)
+
+    messages_data_filtered = list(map(lambda message: strptime_convert(message), messages))
+    messages_data_filtered.reverse()
+    return JsonResponse(messages_data_filtered, safe=False)
+
+
 # ============================================================== APIS ==============================================================
 
 @api_view(['GET'])
@@ -118,6 +152,11 @@ def ping(request, target_uuid):
 @api_view(['GET'])
 def get_target_results(request, target_uuid):
     return __get_target_results(target_uuid)
+
+
+@api_view(['GET'])
+def get_target_pings(request, target_uuid):
+    return __get_target_pings(target_uuid)
 
 # ==================================== BOT INTERNAL API COMMANDS ====================================
 
