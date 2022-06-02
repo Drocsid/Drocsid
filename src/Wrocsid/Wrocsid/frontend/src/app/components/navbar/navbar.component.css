@@ -1,14 +1,9 @@
-/* span {
-    display: table;
-    margin: 0 auto;
-} */
-
 .navbar {
   margin: 0;
   padding-top: 0.5rem;
   background-color: rgb(160, 119, 199);
   color: white;
-  height: 4.5rem;
+  height: 7%;
 }
 
 .navbar span {

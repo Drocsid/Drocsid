@@ -2,7 +2,7 @@
     overflow-y: scroll;
     height: 20rem;
     text-align: center;
-    width: 45.4rem;
+    width: inherit;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
     font-size: larger;

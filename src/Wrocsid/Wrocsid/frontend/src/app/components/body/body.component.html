@@ -6,7 +6,7 @@
     <mat-icon *ngIf="drawer.opened">arrow_back_ios</mat-icon>
     <mat-icon *ngIf="!drawer.opened">arrow_forward_ios</mat-icon>
   </button>
-  <div>
+  <div id="targetsDisplay">
     <div id="search">
       <mat-icon>search</mat-icon>
       <mat-form-field appearance="fill">
@@ -15,7 +15,7 @@
       </mat-form-field>
       <mat-slide-toggle disableRipple="true" class="onlineFilter" [disabled]="!targets$" (change)="onlineFilterClicked()" [(ngModel)]="showOnlineTargetsOnly">Online targets only</mat-slide-toggle>
     </div>
-    <div class="center">
+    <div id="targetsRows">
       <mat-accordion *ngIf="targets$">
         <mat-expansion-panel (click)="changePanelState()" *ngFor="let target of targetsSearch$" [disabled]="!target.online">
           <mat-expansion-panel-header>
@@ -34,6 +34,9 @@
             </mat-tab>
             <mat-tab label="Results">
               <app-commands-results [target$]="target"></app-commands-results>
+            </mat-tab>
+            <mat-tab label="Health Check">
+              <app-target-health-check></app-target-health-check>
             </mat-tab>
           </mat-tab-group>
         </mat-expansion-panel>

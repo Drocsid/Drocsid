@@ -1,11 +1,6 @@
 .main {
-    height: 92.6%;
+    height: 93%;
     background-color: white;
-}
-
-.center {
-    display: flex;
-    justify-content: center;
 }
 
 .online {
@@ -48,4 +43,14 @@ button {
 
 .noTargets div {
     font-size: 3rem;
+}
+
+#targetsDisplay {
+    width: 100%;
+}
+
+#targetsRows {
+    max-width: 45%;
+    min-width: 50rem;
+    margin: 0 auto;
 }

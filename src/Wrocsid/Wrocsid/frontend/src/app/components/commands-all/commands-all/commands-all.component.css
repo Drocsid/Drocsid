@@ -9,8 +9,10 @@ button {
 }
 
 .commandBtnsAll {
-    margin: 3rem;
-    width: 50rem;
+    width: 45rem;
+    margin-right: 5rem;
+    margin-left: 5rem;
+    margin-top : 5.5rem;
 }
 
 .title {
