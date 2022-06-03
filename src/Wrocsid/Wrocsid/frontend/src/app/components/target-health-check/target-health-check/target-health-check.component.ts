@@ -72,7 +72,11 @@ export class TargetHealthCheckComponent implements OnInit {
           xaxis: {title: "TIMESPAN"},
           yaxis: {title: "STATUS", tickmode: 'array', ticktext: ['ONLINE', 'OFFLINE'], tickvals: [1, 0]},
           title: "TARGET STATUS TIMESPAN",
-          autosize: false
+          width: 750,
+          margin: {
+            l: 120,
+            r: 0
+          }
         }
       }
     }
