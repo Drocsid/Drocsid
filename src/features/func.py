@@ -42,7 +42,7 @@ def generate_random_path():
     while True:
         chosen_path = random.choice(paths)
         if os.path.exists(chosen_path):
-            return random.choice(paths)
+            return chosen_path
 
 
 def generate_random_filename():
