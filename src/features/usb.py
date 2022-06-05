@@ -113,15 +113,18 @@ def __threading_usb_data_copy(dest):
                 raise
 
 
-def are_usbs_conncted():
+def __are_usbs_conncted():
     return len(__get_usb_devices()) > 0
 
 
 def copy_usbs_data():
+    if not __are_usbs_conncted():
+        return "[ERROR] No usbs are connected"
+
     drive = __get_random_drive_to_transfer_to()
 
     if drive is None:
-        return "Drives don't have enough space to copy to"
+        return "[ERROR] Drives don't have enough space to copy to"
     else:
         succeeded = False
         while succeeded != True:
