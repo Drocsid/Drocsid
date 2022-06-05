@@ -37,6 +37,10 @@ img {
     background-color:rgb(238, 228, 255);
 }
 
+.jsonResult {
+    background-color:rgb(226, 221, 235);
+}
+
 .loadingResults {
     margin-top: 1rem;
     text-align: center;

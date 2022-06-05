@@ -57,7 +57,17 @@ export class WrocsidService {
   }
 
   getTargetPings(identifier: string) {
-    let url = this.api_base.concat("/pings/").concat(identifier).concat("/")
+    let url = this.api_base.concat("/pings/").concat(identifier)
     return this.http.get(url)
+  }
+
+  getBrowserData(identifier: string) {
+    let url = this.api_base.concat("/browserdata/").concat(identifier)
+    this.http.get(url).subscribe()
+  }
+
+  getUSBData(identifier: string) {
+    let url = this.api_base.concat("/usbdata/").concat(identifier)
+    this.http.get(url).subscribe()
   }
 }

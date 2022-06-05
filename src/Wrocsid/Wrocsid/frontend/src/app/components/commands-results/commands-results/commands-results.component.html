@@ -14,6 +14,10 @@
                     <mat-icon>videocam</mat-icon>
                     <a [href]="attachment.url">{{attachment.filename}}</a>
                 </div>
+                <div *ngIf="isJSON(attachment.content_type)" class="jsonResult">
+                    <mat-icon>insert_drive_file</mat-icon>
+                    <a [href]="attachment.url">{{attachment.filename}}</a>
+                </div>
             </span>
         </div>
     </div>

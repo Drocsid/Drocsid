@@ -47,4 +47,8 @@ export class CommandsResultsComponent implements OnInit {
   isVideo(content_type: string) {
     return content_type === "video/x-msvideo"
   }
+
+  isJSON(content_type: string) {
+    return content_type === "application/json; charset=utf-8"
+  }
 }

