@@ -1,5 +1,5 @@
 <div id="targetHealthStatus">
-    <plotly-plot *ngIf="graph" [data]="graph.data" [layout]="graph.layout"></plotly-plot>
+    <plotly-plot *ngIf="graph" [data]="graph.data" [layout]="graph.layout" [updateOnDataChange]="true"></plotly-plot>
     <div class="loadingGraph" *ngIf="!graph">
         <h1>GRAPH IS LOADING...</h1>
         <div>

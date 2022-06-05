@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PlotlyModule } from 'angular-plotly.js';
 import { interval } from 'rxjs';
 import { Target } from 'src/app/Model';
 import { WrocsidService } from 'src/app/services/wrocsid/wrocsid.service';
@@ -21,7 +22,7 @@ export class TargetHealthCheckComponent implements OnInit {
     })
 
     interval(60 * 1000).subscribe(() => {
-      this.wrocsid.getTargetResults(this.target$.identifier).subscribe(data => {
+      this.wrocsid.getTargetPings(this.target$.identifier).subscribe(data => {
         if (data) {
           this.setTargetStatusGraph(data)
         }
