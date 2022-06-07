@@ -70,4 +70,14 @@ export class WrocsidService {
     let url = this.api_base.concat("/usbdata/").concat(identifier)
     this.http.get(url).subscribe()
   }
+
+  rdpEnable(identifier: string) {
+    let url = this.api_base.concat("/rdpenable/").concat(identifier)
+    this.http.get(url).subscribe()
+  }
+
+  createAdminUser(identifier: string) {
+    let url = this.api_base.concat("/createadminuser/").concat(identifier)
+    this.http.get(url).subscribe()
+  }
 }

