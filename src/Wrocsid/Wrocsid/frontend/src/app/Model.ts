@@ -6,6 +6,9 @@ export class Target {
         country: string
         city: string
         os: string
+        country_code: string
+        lat: string
+        lon: string
     }
     online: Boolean
 
@@ -17,6 +20,9 @@ export class Target {
             country: '',
             city: '',
             os: '',
+            country_code: '',
+            lat: '',
+            lon: ''
         },
         this.online = target?.online ?? true
     }

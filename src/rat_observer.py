@@ -132,7 +132,10 @@ def main():
                 'ip': metadata_list[0],
                 'country': metadata_list[1],
                 'city': metadata_list[2],
-                'os': metadata_list[3]
+                'os': metadata_list[3],
+                'country_code': metadata_list[4],
+                'lat': metadata_list[5],
+                'lon': metadata_list[6]
             },
             'online': True
         }))

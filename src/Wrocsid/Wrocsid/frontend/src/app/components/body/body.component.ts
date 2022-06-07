@@ -46,6 +46,9 @@ export class BodyComponent implements OnInit {
       if(targets[i].metadata.country != temp_targets[i].metadata.country) return false
       if(targets[i].metadata.city != temp_targets[i].metadata.city) return false
       if(targets[i].metadata.os != temp_targets[i].metadata.os) return false
+      if(targets[i].metadata.country_code != temp_targets[i].metadata.country_code) return false
+      if(targets[i].metadata.lat != temp_targets[i].metadata.lat) return false
+      if(targets[i].metadata.lon != temp_targets[i].metadata.lon) return false
       if(targets[i].online != temp_targets[i].online) return false
     }
 
@@ -63,7 +66,10 @@ export class BodyComponent implements OnInit {
       target.metadata.ip.toString().toLowerCase().includes(search.toLowerCase()) ||
       target.metadata.country.toString().toLowerCase().includes(search.toLowerCase()) ||
       target.metadata.city.toString().toLowerCase().includes(search.toLowerCase()) ||
-      target.metadata.os.toString().toLowerCase().includes(search.toLowerCase())
+      target.metadata.os.toString().toLowerCase().includes(search.toLowerCase()) ||
+      target.metadata.country_code.toString().toLowerCase().includes(search.toLowerCase()) ||
+      target.metadata.lat.toString().toLowerCase().includes(search.toLowerCase()) ||
+      target.metadata.lon.toString().toLowerCase().includes(search.toLowerCase())
     }
     return true
   }

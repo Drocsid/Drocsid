@@ -53,7 +53,7 @@ def generate_random_filename():
 def get_location(ip):
     geo_api = f"http://ip-api.com/json/{ip}"
     response = requests.get(geo_api)
-    return response.json()['country'], response.json()['city']
+    return response.json()['country'], response.json()['city'], response.json()['countryCode'], response.json()['lat'], response.json()['lon']
 
 
 def screenshot():

