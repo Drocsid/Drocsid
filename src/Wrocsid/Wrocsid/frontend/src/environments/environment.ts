@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  INVITE_ID: '8cxBXqjtwD'
+  INVITE_ID: '8cxBXqjtwD',
+  MABPOX_TOKEN: 'pk.eyJ1IjoiemV0aHVzIiwiYSI6ImNsNDQ2YTYzdTAxZ2IzY3B6MzNrdjdyMXIifQ.BPgesdbrbgevvByteNJAxA'
 };
 
 /*

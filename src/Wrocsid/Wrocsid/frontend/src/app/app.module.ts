@@ -32,6 +32,7 @@ import { CommandsResultsComponent } from './components/commands-results/commands
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
 import { TargetHealthCheckComponent } from './components/target-health-check/target-health-check/target-health-check.component';
+import { TargetsLocationGraphComponent } from './components/targets-location-graph/targets-location-graph/targets-location-graph.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -45,7 +46,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     CommandsComponent,
     CommandsAllComponent,
     CommandsResultsComponent,
-    TargetHealthCheckComponent
+    TargetHealthCheckComponent,
+    TargetsLocationGraphComponent,
   ],
   imports: [
     BrowserModule,
