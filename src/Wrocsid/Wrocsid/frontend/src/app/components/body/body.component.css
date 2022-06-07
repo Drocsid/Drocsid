@@ -54,3 +54,7 @@ button {
     min-width: 50rem;
     margin: 0 auto;
 }
+
+mat-panel-description {
+    margin-left: 1rem;
+}
