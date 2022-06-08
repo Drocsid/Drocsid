@@ -30,13 +30,6 @@ export class TargetsLocationGraphComponent implements OnInit {
         }
       })
     })
-
-    interval(5 * 1000).subscribe(() => {
-      PlotlyModule.plotlyjs.relayout('targetsLocationGraph', {
-        xaxis: {autorange: true},
-        yaxis: {autorange: true}
-      });
-    })
   }
 
   setTargetsLocationGraph() {
@@ -57,7 +50,7 @@ export class TargetsLocationGraphComponent implements OnInit {
       }]
       
       let layout = {
-        autosize: true,
+        autosize: false,
         hovermode:'closest',
         mapbox: {
           bearing:0,
@@ -68,6 +61,8 @@ export class TargetsLocationGraphComponent implements OnInit {
           pitch:0,
           zoom:7,
         },
+        width: 500,
+        height: 250,
         margin: {
           l: 120,
           r: 0,

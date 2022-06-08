@@ -1,5 +1,5 @@
 .main {
-    height: 92vh;
+    height: 89%;
     background-color: white;
 }
 
@@ -46,21 +46,20 @@ button {
 }
 
 #targetsDisplay {
-    max-width: 40vw;
+    max-width: 100%;
     margin: 0 auto;
 }
 
-/* #targetsRows {
-    max-width: 50vw;
+#targetsRows {
+    max-width: 70%;
     margin: 0 auto;
-} */
+}
 
 mat-panel-description {
     margin-left: 1rem;
 }
 
 mat-drawer {
-    width: 50%;
     max-width: 50%;
 }
 
