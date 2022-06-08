@@ -55,11 +55,11 @@ export class TargetsLocationGraphComponent implements OnInit {
         mapbox: {
           bearing:0,
           center: {
-            lat:31,
+            lat:32,
             lon:35
           },
           pitch:0,
-          zoom:5,
+          zoom:7,
         },
         width: 500,
         height: 250,
@@ -67,7 +67,7 @@ export class TargetsLocationGraphComponent implements OnInit {
           l: 120,
           r: 0,
           t: 0,
-          b: 0
+          b:20
         }
       }
 
