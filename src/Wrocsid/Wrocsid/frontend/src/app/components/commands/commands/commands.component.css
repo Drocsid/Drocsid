@@ -15,6 +15,7 @@ button {
     height: 25rem;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+    text-align: center;
 }
 
 .commandBtns::-webkit-scrollbar {

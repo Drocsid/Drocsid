@@ -50,7 +50,7 @@ export class TargetsLocationGraphComponent implements OnInit {
       }]
       
       let layout = {
-        autosize: true,
+        autosize: false,
         hovermode:'closest',
         mapbox: {
           bearing:0,
@@ -61,9 +61,10 @@ export class TargetsLocationGraphComponent implements OnInit {
           pitch:0,
           zoom:5,
         },
-        width: 800,
+        width: 500,
+        height: 250,
         margin: {
-          l: 100,
+          l: 120,
           r: 0,
           t: 0,
           b: 0
