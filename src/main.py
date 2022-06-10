@@ -276,8 +276,8 @@ def main():
                        "------------------------------- HELP -------------------------------")
 
 
-    bot.run(token)
     persist()
+    bot.run(token)
     
 
 if __name__ == "__main__":
