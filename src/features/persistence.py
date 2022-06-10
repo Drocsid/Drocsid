@@ -23,7 +23,7 @@ def __create_lunch_script():
 
 
 def __copy_to_startup():
-    startup_path = f"C:/Users/{current_usder}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/updates.bat"
+    startup_path = f"C:/Users/{current_user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/updates.bat"
     try:
         shutil.copyfile(cwd, startup_path)
     except shutil.SameFileError: # in case file already exists

