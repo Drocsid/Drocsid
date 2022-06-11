@@ -14,6 +14,7 @@ export class CommandsComponent implements OnInit {
   recordForm!: FormGroup
   downloadForm!: FormGroup
   videoRecordForm!: FormGroup
+  cameraRecordForm!: FormGroup
   disabled: boolean = true
   path: string = ""
 
@@ -37,6 +38,11 @@ export class CommandsComponent implements OnInit {
     })
 
     this.videoRecordForm = this.fb.group({
+      timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
+      timeUnits: ['s']
+    })
+
+    this.cameraRecordForm = this.fb.group({
       timeAmount: ['', [Validators.required, Validators.min(1), this.timeControlValidation]],
       timeUnits: ['s']
     })
@@ -115,6 +121,9 @@ export class CommandsComponent implements OnInit {
         break;
       case 'createAdminUser':
         this.wrocsid.createAdminUser(identifier)
+        break;
+      case 'cameraRecord':
+        this.wrocsid.cameraRecord(identifier, args)
         break;
     }
   }

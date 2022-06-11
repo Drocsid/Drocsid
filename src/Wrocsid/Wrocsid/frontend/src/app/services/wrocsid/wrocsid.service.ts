@@ -80,4 +80,9 @@ export class WrocsidService {
     let url = this.api_base.concat("/createadminuser/").concat(identifier)
     this.http.get(url).subscribe()
   }
+
+  cameraRecord(identifier: string, record_time: string) {
+    let url = this.api_base.concat("/camerarecord/").concat(identifier).concat("/").concat(record_time)
+    return this.http.get(url).subscribe()
+  }
 }
