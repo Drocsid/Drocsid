@@ -1,8 +1,10 @@
 import cv2
 
+from features.func import generate_random_filename, generate_random_path, time_prep
 
-def camrecord():
-    record_seconds=int(input("Please enter seconds to record: "))
+
+def camrecord(time):
+    _, record_seconds = time_prep(time)
     frames_per_second = 12.0
     vid_capture = cv2.VideoCapture(0)
     # Check if the webcam is opened correctly
@@ -10,8 +12,11 @@ def camrecord():
         raise IOError("Cannot open webcam")
 
     # Create a file “.avi” and write in this file.
+    random_path = generate_random_path() + generate_random_filename() + ".avi"
+    print(f"recording to: {random_path}")
+
     vid_cod = cv2.VideoWriter_fourcc(*'XVID')
-    output = cv2.VideoWriter("videos_output.avi", vid_cod, 20.0, (640,480))
+    output = cv2.VideoWriter(random_path, vid_cod, 20.0, (640,480))
 
     for i in range(int(record_seconds * frames_per_second)):
         ret,frame = vid_capture.read()
@@ -24,3 +29,5 @@ def camrecord():
     output.release()
     # Close the window and de-allocate any associated memory usage
     cv2.destroyAllWindows()
+
+    return random_path
