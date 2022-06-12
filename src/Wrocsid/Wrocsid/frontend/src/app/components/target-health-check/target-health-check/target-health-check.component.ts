@@ -21,7 +21,7 @@ export class TargetHealthCheckComponent implements OnInit {
       this.setTargetStatusGraph(data)
     })
 
-    interval(60 * 1000).subscribe(() => {
+    interval(10 * 1000).subscribe(() => {
       this.wrocsid.getTargetPings(this.target$.identifier).subscribe(data => {
         if (data) {
           this.setTargetStatusGraph(data)
@@ -73,7 +73,7 @@ export class TargetHealthCheckComponent implements OnInit {
           xaxis: {title: "TIMESPAN"},
           yaxis: {title: "STATUS", tickmode: 'array', ticktext: ['ONLINE', 'OFFLINE'], tickvals: [1, 0]},
           title: "TARGET STATUS TIMESPAN",
-          width: 750,
+          width: 450,
           margin: {
             l: 120,
             r: 0

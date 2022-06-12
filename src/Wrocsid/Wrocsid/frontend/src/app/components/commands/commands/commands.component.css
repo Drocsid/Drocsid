@@ -5,19 +5,21 @@
 }
 
 button {
-    width: 200px;
+    width: 150px;
 }
 
-.commandBtns {
-    margin-left: 3rem;
+.commandBtns { 
     margin-top: 1rem;
     overflow-y: scroll;
     height: 25rem;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-    text-align: center;
 }
 
 .commandBtns::-webkit-scrollbar {
     display: none;
+}
+
+mat-form-field {
+    width: 150px;
 }

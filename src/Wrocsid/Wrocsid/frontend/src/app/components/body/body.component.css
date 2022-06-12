@@ -51,7 +51,8 @@ button {
 }
 
 #targetsRows {
-    max-width: 70%;
+    width: 45vw;
+    max-width: 80%;
     margin: 0 auto;
 }
 
@@ -63,10 +64,18 @@ mat-drawer {
     max-width: 50%;
 }
 
+mat-drawer-inner-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+mat-drawer-inner-container::-webkit-scrollbar {
+    display: none;
+}
 mat-panel-description {
-    overflow: hidden
+    height: fit-content;
 }
 
 mat-expansion-panel-header {
-    overflow: hidden;
+    height: fit-content;
 }
